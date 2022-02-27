@@ -1,0 +1,37 @@
+{
+  "name": "base-back",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "update-bit": "rm -rf node_modules/@bit && rm -f yarn.lock && yarn",
+    "start": "export NODE_ENV=production && ts-node ./index.ts",
+    "dev": "export VERSION=$(node -p \"require('./package.json').version\") && ts-node-dev ./index.ts",
+    "bit:rm": "bit remove base-back --force && bit remove juki-team.juki/base-back --remote --force",
+    "bit:add": "bit add src/base-back && bit tag --all && bit export juki-team.juki",
+    "bit:update": "yarn bit:rm || yarn bit:add"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.5"
+  },
+  "bit": {
+    "env": {
+      "compiler": "bit.envs/compilers/typescript@3.1.53"
+    },
+    "overrides": {
+      "*": {
+        "devDependencies": {
+          "@types/node": "+"
+        }
+      }
+    },
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+  },
+  "dependencies": {
+    "@bit/juki-team.juki.commons": "^0.0.1",
+    "dotenv": "^16.0.0"
+  }
+}
