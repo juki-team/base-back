@@ -28,6 +28,7 @@ yarn-error.log*
 
 # BIT
 /dist
+/.bit
 
 # typedoc
 ./docs
