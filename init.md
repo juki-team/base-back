@@ -10,9 +10,9 @@ sudo apt update && sudo apt install --no-install-recommends yarn
 # Adding typscript
 
 ``` 
- yarn init
- yarn add typescript --dev
- yarn tsc --init
+yarn init
+yarn add typescript --dev
+yarn tsc --init
 ```
 
 # Bit

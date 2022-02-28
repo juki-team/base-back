@@ -2,17 +2,26 @@ import * as util from 'util';
 import { isStringJson, logError, logInfo, logMessage } from '../helpers';
 
 export class TelegramBotService {
-  _JUKI_LOGS_BOT_TOKEN: string;
-  _JUKI_LOGS_CHAT_ID: string;
-  _HEADER: string;
+  _JUKI_LOGS_BOT_TOKEN?: string;
+  _JUKI_LOGS_CHAT_ID?: string;
+  _HEADER?: string;
   _fetcher: (url: string, options?: any) => Promise<string>;
   readonly maxSizeText = 2000;
   
-  constructor(jukiLogsBotToken: string, jukiLogsChatId: string, header: string, fetcher: (url: string, options?: any) => Promise<any>) {
+  constructor(fetcher: (url: string, options?: any) => Promise<any>) {
+    // this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
+    // this._JUKI_LOGS_CHAT_ID = jukiLogsChatId;
+    // this._HEADER = header;
+    this._fetcher = fetcher;
+  }
+  
+  config(jukiLogsBotToken: string, jukiLogsChatId: string, header: string, fetcher?: (url: string, options?: any) => Promise<any>) {
     this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     this._JUKI_LOGS_CHAT_ID = jukiLogsChatId;
     this._HEADER = header;
-    this._fetcher = fetcher;
+    if (fetcher) {
+      this._fetcher = fetcher;
+    }
   }
   
   // https://core.telegram.org/bots/api#markdownv2-style
@@ -39,6 +48,9 @@ export class TelegramBotService {
   }
   
   sendMessage(markdownV2Text: string) {
+    if (!this._JUKI_LOGS_BOT_TOKEN || !this._JUKI_LOGS_BOT_TOKEN || !this._HEADER) {
+      return logMessage('PLEASE SET UP THE \'TelegramBotService\'');
+    }
     logMessage('Sending Telegram log...');
     this._fetcher(
       `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
