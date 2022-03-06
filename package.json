@@ -1,6 +1,6 @@
 {
   "name": "base-back",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
     "bit:pull": "rm -rf node_modules/@bit && rm -f yarn.lock && yarn",
     "bit:rm": "bit remove base-back --force && bit remove juki-team.juki/base-back --remote --force",
     "bit:add": "bit add src/base-back && bit tag --all && bit export juki-team.juki",
-    "bit:push": "yes | yarn bit:rm ; yarn bit:add"
+    "bit:push": "yarn version --patch ; yes | yarn bit:rm ; yarn bit:add"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
