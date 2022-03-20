@@ -13,7 +13,7 @@ import { ErrorCode, JkError } from '../types';
  Otherwise, the next object will be interpreted as regular middleware and will fail to handle errors.
  */
 
-export function errorLogger(err: any, request: Request, response: Response, next: NextFunction) {
+export function errorLoggerHandler(err: any, request: Request, response: Response, next: NextFunction) {
   const { headers, method, url } = request;
   const error = {
     headers,
@@ -25,7 +25,7 @@ export function errorLogger(err: any, request: Request, response: Response, next
   next(err);
 }
 
-export function errorResponder(err: any, request: Request, response: Response, next: NextFunction) {
+export function errorResponderHandler(err: any, request: Request, response: Response, next: NextFunction) {
   if (request.xhr) {
     response
       .status(500)

@@ -4,55 +4,55 @@ import os from 'os';
 import { NODE_ENV, VERSION } from '../config';
 import { response500 } from '../helpers';
 
-export function routerGetPing(req: Request, res: Response) {
+export function routerGetPing(request: Request, response: Response) {
   try {
-    res.send('pong ');
+    response.send('pong ');
   } catch (error) {
-    response500(res, error, 'Error handling "handlePing"');
+    response500(response, error, 'Error handling "handlePing"');
   }
 }
 
-export function routerGetVersion(req: Request, res: Response) {
+export function routerGetVersion(request: Request, response: Response) {
   try {
-    res.send(VERSION);
+    response.send(VERSION);
   } catch (error) {
-    response500(res, error, 'Error handling "handleVersion"');
+    response500(response, error, 'Error handling "handleVersion"');
   }
 }
 
-export function routerGetEnv(req: Request, res: Response) {
+export function routerGetEnv(request: Request, response: Response) {
   try {
-    res.send(NODE_ENV);
+    response.send(NODE_ENV);
   } catch (error) {
-    response500(res, error, 'Error handling "handleEnv"');
+    response500(response, error, 'Error handling "handleEnv"');
   }
 }
 
-export function routerGetStatus(req: Request, res: Response) {
+export function routerGetStatus(request: Request, response: Response) {
   try {
-    res.send({
+    response.send({
       time: new Date(),
       cpus: os.cpus(),
       totalmem: os.totalmem(),
       freemem: os.freemem(),
     });
   } catch (error) {
-    response500(res, error, 'Error handling "handleStatus"');
+    response500(response, error, 'Error handling "handleStatus"');
   }
 }
 
-export function routerGetLsFolderPath(req: Request<{ folderPath: string }>, res: Response) {
+export function routerGetLsFolderPath(request: Request<{ folderPath: string }>, response: Response) {
   try {
-    res.send(fs.readdirSync(req.params.folderPath));
+    response.send(fs.readdirSync(request.params.folderPath));
   } catch (error) {
-    response500(res, error, 'Error handling "handleLs" /ls/' + req.params.folderPath);
+    response500(response, error, 'Error handling "handleLs" /ls/' + request.params.folderPath);
   }
 }
 
-export function routerGetCatFilePath(req: Request<{ filePath: string }>, res: Response) {
+export function routerGetCatFilePath(request: Request<{ filePath: string }>, response: Response) {
   try {
-    res.send(fs.readFileSync(req.params.filePath, 'utf8'));
+    response.send(fs.readFileSync(request.params.filePath, 'utf8'));
   } catch (error) {
-    response500(res, error, 'Error handling "handleCat" /cat/' + req.params.filePath);
+    response500(response, error, 'Error handling "handleCat" /cat/' + request.params.filePath);
   }
 }
