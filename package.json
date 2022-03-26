@@ -1,6 +1,6 @@
 {
   "name": "base-back",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -12,6 +12,8 @@
     "bit:push": "yarn version --patch ; yes | yarn bit:rm ; yarn bit:add"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.21",
     "ts-node-dev": "^1.1.8",
@@ -49,7 +51,7 @@
   },
   "dependencies": {
     "@bit/juki-team.juki.commons": "^0.0.1",
-    "@types/cors": "^2.8.12",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3"
