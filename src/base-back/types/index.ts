@@ -1,8 +1,1 @@
-export {
-  ContentsMetaType,
-  ErrorResponseType,
-  ErrorCode,
-  JkError,
-  ContentResponseType,
-  ContentsResponseType,
-} from '@bit/juki-team.juki.commons';
+export type ResponseOptionsType = { message?: string, notify?: boolean, status?: number };

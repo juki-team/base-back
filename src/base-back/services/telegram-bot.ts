@@ -1,21 +1,6 @@
-import { IncomingMessage } from 'http';
-import https from 'https';
+import { fetcherHttps } from '../helpers/request';
 import { TelegramBotService } from './';
 
-const fetcher = (url: string) => {
-  return new Promise((resolve, reject) => {
-    https.get(url, (response: IncomingMessage) => {
-      let data = '';
-      response.on('data', chunk => {
-        data += chunk;
-      });
-      
-      response.on('end', () => {
-        resolve(data);
-      });
-    }).on('error', (err: Error) => reject(err));
-  });
-};
+const getFetcher = (uri: string) => fetcherHttps({ uri, method: 'GET' });
 
-export const jkLogTelegramBot = new TelegramBotService(fetcher);
-
+export const jkLogTelegramBot = new TelegramBotService(getFetcher);

@@ -1,58 +1,59 @@
-import { Request, Response } from 'express';
+import { toJkError } from '@bit/juki-team.juki.commons';
+import { Request } from 'express';
 import fs from 'fs';
 import os from 'os';
 import { NODE_ENV, VERSION } from '../config';
-import { response500 } from '../helpers';
+import { JkResponse } from '../middlewares';
 
-export function routerGetPing(request: Request, response: Response) {
+export function routerGetPing(request: Request, response: JkResponse) {
   try {
-    response.send('pong ');
+    response.sendContent('pong');
   } catch (error) {
-    response500(response, error, 'Error handling "handlePing"');
+    response.send500(toJkError(error), { message: 'Error handling "routerGetPing"' });
   }
 }
 
-export function routerGetVersion(request: Request, response: Response) {
+export function routerGetVersion(request: Request, response: JkResponse) {
   try {
-    response.send(VERSION);
+    response.sendContent(VERSION);
   } catch (error) {
-    response500(response, error, 'Error handling "handleVersion"');
+    response.send500(toJkError(error), { message: 'Error handling "routerGetVersion"' });
   }
 }
 
-export function routerGetEnv(request: Request, response: Response) {
+export function routerGetEnv(request: Request, response: JkResponse) {
   try {
-    response.send(NODE_ENV);
+    response.sendContent(NODE_ENV);
   } catch (error) {
-    response500(response, error, 'Error handling "handleEnv"');
+    response.send500(toJkError(error), { message: 'Error handling "routerGetEnv"' });
   }
 }
 
-export function routerGetStatus(request: Request, response: Response) {
+export function routerGetStatus(request: Request, response: JkResponse) {
   try {
-    response.send({
+    response.sendContent({
       time: new Date(),
       cpus: os.cpus(),
       totalmem: os.totalmem(),
       freemem: os.freemem(),
     });
   } catch (error) {
-    response500(response, error, 'Error handling "handleStatus"');
+    response.send500(toJkError(error), { message: 'Error handling "routerGetStatus"' });
   }
 }
 
-export function routerGetLsFolderPath(request: Request<{ folderPath: string }>, response: Response) {
+export function routerGetLsFolderPath(request: Request<{ folderPath: string }>, response: JkResponse) {
   try {
-    response.send(fs.readdirSync(request.params.folderPath));
+    response.sendContent(fs.readdirSync(request.params.folderPath));
   } catch (error) {
-    response500(response, error, 'Error handling "handleLs" /ls/' + request.params.folderPath);
+    response.send500(toJkError(error), { message: 'Error handling "routerGetLsFolderPath" /ls/' + request.params.folderPath });
   }
 }
 
-export function routerGetCatFilePath(request: Request<{ filePath: string }>, response: Response) {
+export function routerGetCatFilePath(request: Request<{ filePath: string }>, response: JkResponse) {
   try {
-    response.send(fs.readFileSync(request.params.filePath, 'utf8'));
+    response.sendContent(fs.readFileSync(request.params.filePath, 'utf8'));
   } catch (error) {
-    response500(response, error, 'Error handling "handleCat" /cat/' + request.params.filePath);
+    response.send500(toJkError(error), { message: 'Error handling "routerGetCatFilePath" /cat/' + request.params.filePath });
   }
 }

@@ -1,5 +1,6 @@
+import { isStringJson } from '@bit/juki-team.juki.commons';
 import * as util from 'util';
-import { isStringJson, logError, logInfo, logMessage } from '../helpers';
+import { logError, logInfo, logMessage } from '../helpers';
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN?: string;
@@ -52,7 +53,7 @@ export class TelegramBotService {
       return logMessage('PLEASE SET UP THE \'TelegramBotService\'');
     }
     logMessage('Sending Telegram log...');
-    this._fetcher(
+    return this._fetcher(
       `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
       `sendMessage?chat_id=${this._JUKI_LOGS_CHAT_ID}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`,
     )
@@ -80,7 +81,7 @@ export class TelegramBotService {
       this.escape(errorText.length === this.maxSizeText ? errorText + '\n...message to large...' : errorText),
       '```',
     ].join('\n');
-    this.sendMessage(message);
+    return this.sendMessage(message);
   }
   
   sendInfoMessage(title: string, content: any) {

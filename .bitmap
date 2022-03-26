@@ -4,11 +4,6 @@
     "juki-team.juki/base-back@0.0.1": {
         "files": [
             {
-                "relativePath": "src/base-back/config/constants/index.ts",
-                "test": false,
-                "name": "index.ts"
-            },
-            {
                 "relativePath": "src/base-back/config/index.ts",
                 "test": false,
                 "name": "index.ts"
@@ -29,6 +24,16 @@
                 "name": "index.ts"
             },
             {
+                "relativePath": "src/base-back/helpers/app.ts",
+                "test": false,
+                "name": "app.ts"
+            },
+            {
+                "relativePath": "src/base-back/helpers/file.ts",
+                "test": false,
+                "name": "file.ts"
+            },
+            {
                 "relativePath": "src/base-back/helpers/index.ts",
                 "test": false,
                 "name": "index.ts"
@@ -37,6 +42,11 @@
                 "relativePath": "src/base-back/helpers/log.ts",
                 "test": false,
                 "name": "log.ts"
+            },
+            {
+                "relativePath": "src/base-back/helpers/request.ts",
+                "test": false,
+                "name": "request.ts"
             },
             {
                 "relativePath": "src/base-back/helpers/responses.ts",
