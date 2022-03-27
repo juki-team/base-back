@@ -11,17 +11,20 @@ import { Response } from 'express';
 import { jkLogTelegramBot } from '../services';
 import { ResponseOptionsType } from '../types';
 
-export type Response500 = (error: JkError, options: { message?: string }, ...restErrors: JkError[]) => void;
+export type Response500 = (error: JkError, options?: { message?: string }, ...restErrors: JkError[]) => void;
 export type ResponseError = (error: JkError, options?: ResponseOptionsType, ...restErrors: JkError[]) => void;
 export type ResponseContents = <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => void;
 export type ResponseContent = <T, >(content: T, options?: ResponseOptionsType) => void;
 
-export const response500 = (response: Response) => (error: JkError, { message: _message }: { message?: string }, ...restErrors: JkError[]) => {
+export const response500 = (response: Response) => (error: JkError, options?: { message?: string }, ...restErrors: JkError[]) => {
+  
+  const { message: _message } = options || {};
   
   const message = _message || error?.message;
   const errors = [error, ...restErrors];
   
-  jkLogTelegramBot.sendErrorMessage(`500: ${message}`, errors);
+  const logMessage = `500: ${message}`;
+  jkLogTelegramBot.sendErrorMessage(logMessage, errors);
   
   return response.status(500).send(errorsResponse(message, ...errors));
 };
@@ -32,7 +35,7 @@ export const responseError = (response: Response) => (error: JkError, options?: 
   
   const errors = [error, ...restErrors];
   
-  if (errors.some(error => error.code === ErrorCode.ERR500)) {
+  if (errors.some(error => error.code === ErrorCode.ERR500 || !ERROR[error.code])) {
     return response500(response)(error, { message: _message }, ...restErrors);
   }
   

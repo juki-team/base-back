@@ -2,6 +2,8 @@ import fs from 'fs';
 
 export const readFile = (fileName: string) => fs.readFileSync(fileName, 'utf8');
 
+export const writeFile = (fileName: string, data: string) => fs.writeFileSync(fileName, data);
+
 export const getFiles = (dir: string, recursive: true, files__?: string[]) => {
   const files_: string[] = files__ || [];
   const files = fs.readdirSync(dir);
@@ -16,4 +18,4 @@ export const getFiles = (dir: string, recursive: true, files__?: string[]) => {
   return files_;
 };
 
-export const removeFolder = (folderPath: string) => fs.rmdirSync(folderPath, { recursive: true })
+export const removeFolder = (folderPath: string, { recursive = true }: { recursive: boolean }) => fs.rmdirSync(folderPath, { recursive });
