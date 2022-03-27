@@ -17,9 +17,10 @@ export const fetcherHttps = ({
       path,
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Content-Length': postData.length,
       },
+      timeout: 900000,
     };
     
     const req = https.request(options, (res) => {
