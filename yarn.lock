@@ -4,8 +4,8 @@
 
 "@bit/juki-team.juki.commons@^0.0.1":
   version "0.0.1"
-  resolved "https://node.bit.dev/juki-team.juki.commons/-/juki-team.juki.commons-0.0.1.tgz#b2af3755f80bae2044162c8ecb8c11b630de23c4"
-  integrity sha1-sq83VfgLriBEFiyOy4wRtjDeI8Q=
+  resolved "https://node.bit.dev/juki-team.juki.commons/-/juki-team.juki.commons-0.0.1.tgz#f7e3f99e6996a026a7c74eeff8dc680b1290d6fb"
+  integrity sha1-9+P5nmmWoCanx07v+NxoCxKQ1vs=
 
 "@types/body-parser@*":
   version "1.19.2"
