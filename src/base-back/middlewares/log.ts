@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { logInfo, logMessage } from '../helpers';
 
 export function loggerAllRequestHandler(request: Request, response: Response, next: NextFunction) {
-  const { rawHeaders, httpVersion, method, socket, url } = request;
+  const { rawHeaders, httpVersion, method, socket, url, body, params } = request;
   const { remoteAddress, remoteFamily } = socket;
   
   const data = {
@@ -13,8 +13,13 @@ export function loggerAllRequestHandler(request: Request, response: Response, ne
     remoteAddress,
     remoteFamily,
     url,
+    body,
+    params,
   };
-  logInfo(data, 'Request: ' + url);
+  const requestStart = Date.now();
+  const no = nextNRequest().padStart(5);
+  logInfo(data, `[request: ${no}] ${url}`);
+  response.on('finish', () => logMessage(`[request: ${no}] ${url} [${Date.now() - requestStart}]`));
   next();
 }
 

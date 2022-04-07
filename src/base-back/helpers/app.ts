@@ -1,11 +1,13 @@
+import { LogLevel } from '@bit/juki-team.juki.commons';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express } from 'express';
-import { NODE_ENV, ORIGINS, PORT, VERSION } from '../config';
+import { LOG_LEVEL, NODE_ENV, ORIGINS, PORT, VERSION } from '../config';
 import {
   errorLoggerHandler,
   errorResponderHandler,
   failSafeHandler,
+  loggerAllRequestHandler,
   loggerRequestTimeHandler,
   responsesMiddleware,
 } from '../middlewares';
@@ -33,7 +35,12 @@ export const initialSetupApp = () => {
   app.disable('x-powered-by');
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(loggerRequestTimeHandler);
+  if (LOG_LEVEL === LogLevel.TRACE || LOG_LEVEL === LogLevel.DEBUG) {
+    app.use(loggerAllRequestHandler);
+  } else if (LOG_LEVEL === LogLevel.INFO) {
+    app.use(loggerRequestTimeHandler);
+  }
+  
   app.use(responsesMiddleware);
   app.use(cors({ origin: ORIGINS, credentials: true }));
   app.use(cookieParser());

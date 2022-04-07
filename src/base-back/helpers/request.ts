@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { IncomingMessage } from 'http';
 import https from 'https';
-import { logMessage } from './log';
+import { logInfo, logMessage } from './log';
 
 export const fetcherHttps = ({
   hostname = '',
@@ -22,14 +23,14 @@ export const fetcherHttps = ({
       },
       timeout: 900000,
     };
-    
-    const req = https.request(options, (res) => {
-      logMessage('statusCode: ' + res.statusCode);
-      logMessage('headers:' + res.headers);
-      res.on('data', (d) => process.stdout.write(d));
+    logInfo({ options, postData }, 'fetcherHttps POST');
+    const req = https.request(options, (response) => {
+      logMessage('statusCode: ' + response.statusCode);
+      logMessage('headers:' + response.headers);
+      response.on('data', (d) => process.stdout.write(d));
       const data: Uint8Array[] = [];
-      res.on('data', (chunk) => data.push(chunk));
-      res.on('end', () => resolve(Buffer.concat(data).toString()));
+      response.on('data', (chunk) => data.push(chunk));
+      response.on('end', () => resolve(Buffer.concat(data).toString()));
     }).on('error', (e) => reject(e));
     req.write(postData);
     req.end();
@@ -37,9 +38,21 @@ export const fetcherHttps = ({
   } else if (method === 'GET') {
     const url = uri || hostname + path;
     https.get(url, (response: IncomingMessage) => {
+      logMessage('statusCode: ' + response.statusCode);
+      logMessage('headers:' + response.headers);
       const data: Uint8Array[] = [];
       response.on('data', chunk => data.push(chunk));
       response.on('end', () => resolve(Buffer.concat(data).toString()));
     }).on('error', (err: Error) => reject(err));
   }
 });
+
+export const fetcherAxios = async ({ method = 'GET', url, body = {} }: { method?: string, url: string, body?: Object }) => {
+  if (method === 'POST') {
+    logInfo({ url, method, body }, 'fetcherAxios POST');
+    return await axios.post(url, body, { timeout: 900000 });
+  } else if (method === 'GET') {
+    logInfo({ url, method }, 'fetcherAxios GET');
+    return await axios.get(url, { timeout: 900000 });
+  }
+};

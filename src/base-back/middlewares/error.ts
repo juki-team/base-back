@@ -12,11 +12,13 @@ import { jkLogTelegramBot } from '../services';
  */
 
 export function errorLoggerHandler(err: any, request: Request, response: Response, next: NextFunction) {
-  const { headers, method, url } = request;
+  const { headers, method, url, body, params } = request;
   const error = {
     headers,
     method,
     url,
+    body,
+    params,
     error: err.stack,
   };
   jkLogTelegramBot.sendErrorMessage(`Logging error [[${url}]]`, error);
