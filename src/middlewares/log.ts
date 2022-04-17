@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { logInfo, logMessage } from '../helpers';
+import { logInfo, logMessage } from '../helpers/log';
 
 export function loggerAllRequestHandler(request: Request, response: Response, next: NextFunction) {
   const { rawHeaders, httpVersion, method, socket, url, body, params } = request;

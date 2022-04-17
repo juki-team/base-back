@@ -1,9 +1,9 @@
-import { toJkError } from '@bit/juki-team.juki.commons';
+import { toJkError } from '@juki-team/commons';
 import { Request } from 'express';
 import fs from 'fs';
 import os from 'os';
 import { NODE_ENV, VERSION } from '../config';
-import { JkResponse } from '../middlewares';
+import { JkResponse } from '../types';
 
 export function routerGetPing(request: Request, response: JkResponse) {
   try {

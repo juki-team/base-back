@@ -1,4 +1,4 @@
-import { LogLevel } from '@bit/juki-team.juki.commons';
+import { LogLevel } from '@juki-team/commons';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express } from 'express';

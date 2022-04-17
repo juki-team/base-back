@@ -1,56 +1,33 @@
 {
-  "name": "base-back",
-  "version": "1.0.38",
-  "main": "index.js",
+  "name": "@juki-team/base-back",
+  "version": "0.0.1",
   "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "start": "export NODE_ENV=production && ts-node ./index.ts",
     "dev": "export VERSION=$(node -p \"require('./package.json').version\") && ts-node-dev ./index.ts",
-    "bit:pull": "rm -rf node_modules/@bit && rm -f yarn.lock && yarn",
-    "bit:rm": "bit remove base-back --force && bit remove juki-team.juki/base-back --remote --force",
-    "bit:add": "bit add src/base-back && bit tag --all && bit export juki-team.juki",
-    "bit:push": "yarn version --patch ; yes | yarn bit:rm ; yarn bit:add"
+    "pull": "yarn add @juki-team/commons",
+    "rollup:build": "rollup -c",
+    "build": "rm -rf dist && yarn rollup:build",
+    "push": "yarn build && yarn publish --patch && git add . && node -p \"require('./package.json').version\" | git commit -F - ; git push origin main && node -p \"require('./package.json').version\""
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.21",
+    "rollup": "^2.70.2",
+    "rollup-plugin-typescript2": "^0.31.2",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.5"
   },
-  "bit": {
-    "env": {
-      "compiler": {
-        "bit.envs/compilers/typescript@3.1.53": {
-          "rawConfig": {
-            "tsconfig": {
-              "compilerOptions": {
-                "target": "es2017",
-                "module": "CommonJS",
-                "lib": [
-                  "es2017",
-                  "dom",
-                  "scripthost"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "componentsDefaultDirectory": "components/{name}",
-    "packageManager": "yarn",
-    "overrides": {
-      "*": {
-        "devDependencies": {
-          "@types/node": "+"
-        }
-      }
-    }
-  },
   "dependencies": {
-    "@bit/juki-team.juki.commons": "^0.0.1",
+    "@juki-team/commons": "^0.0.25",
     "axios": "^0.26.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

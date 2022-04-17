@@ -1,5 +1,5 @@
 require('dotenv').config();
-import { jkLogTelegramBot } from './src/base-back';
+import { jkLogTelegramBot } from './src';
 
 export const NODE_ENV = process.env.NODE_ENV || 'development';
 export const TELEGRAM_JUKI_LOGS_BOT_TOKEN = process.env.TELEGRAM_JUKI_LOGS_BOT_TOKEN || '';

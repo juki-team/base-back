@@ -6,7 +6,7 @@ import {
   ErrorCode,
   errorsResponse,
   JkError,
-} from '@bit/juki-team.juki.commons';
+} from '@juki-team/commons';
 import { Response } from 'express';
 import { jkLogTelegramBot } from '../services';
 import { ResponseOptionsType } from '../types';

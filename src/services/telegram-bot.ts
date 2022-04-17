@@ -1,5 +1,5 @@
-import { fetcherHttps } from '../helpers';
-import { TelegramBotService } from './';
+import { fetcherHttps } from '../helpers/request';
+import { TelegramBotService } from './telegram-bot.service';
 
 const getFetcher = (uri: string) => fetcherHttps({ uri, method: 'GET' });
 

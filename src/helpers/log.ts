@@ -1,4 +1,4 @@
-import { LogLevel } from '@bit/juki-team.juki.commons';
+import { LogLevel } from '@juki-team/commons';
 import util from 'util';
 import { LOG_LEVEL } from '../config';
 
