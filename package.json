@@ -1,6 +1,7 @@
 {
   "name": "@juki-team/base-back",
-  "version": "0.0.3",
+  "version": "0.0.4",
+  "type": "module",
   "license": "MIT",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -9,8 +10,8 @@
     "/dist"
   ],
   "scripts": {
-    "start": "export NODE_ENV=production && ts-node ./index.ts",
-    "dev": "export VERSION=$(node -p \"require('./package.json').version\") && ts-node-dev ./index.ts",
+    "start": "export NODE_ENV=production && ts-node ./src/app.ts",
+    "dev": "export VERSION=$(node -p \"require('./package.json').version\") && ts-node-dev ./src/app.ts",
     "pull": "yarn add @juki-team/commons",
     "rollup:build": "rollup -c",
     "build": "rm -rf dist && yarn rollup:build",
