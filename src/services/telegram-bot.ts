@@ -1,6 +1,6 @@
-import { fetcherHttps } from '../helpers/request';
+import { fetcherAxios } from '../helpers';
 import { TelegramBotService } from './telegram-bot.service';
 
-const getFetcher = (uri: string) => fetcherHttps({ uri, method: 'GET' });
+const getFetcher = (url: string) => fetcherAxios({ url });
 
 export const jkLogTelegramBot = new TelegramBotService(getFetcher);

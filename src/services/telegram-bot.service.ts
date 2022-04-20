@@ -1,12 +1,12 @@
-import { isStringJson } from '@juki-team/commons';
+import { AxiosResponse } from 'axios';
 import * as util from 'util';
-import { logError, logInfo, logMessage } from '../helpers/log';
+import { logError, logInfo, logMessage } from '../helpers';
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN?: string;
   _JUKI_LOGS_CHAT_ID?: string;
   _HEADER?: string;
-  _fetcher: (url: string, options?: any) => Promise<string>;
+  _fetcher: (url: string, options?: any) => Promise<AxiosResponse>;
   readonly maxSizeText = 2000;
   
   constructor(fetcher: (url: string, options?: any) => Promise<any>) {
@@ -57,14 +57,11 @@ export class TelegramBotService {
       `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
       `sendMessage?chat_id=${this._JUKI_LOGS_CHAT_ID}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`,
     )
-      .then(data => {
-        if (isStringJson(data)) {
-          const response = JSON.parse(data);
-          if (response.ok) {
-            return logInfo(data, 'Telegram message sent');
-          }
+      .then(response => {
+        if (response.data.ok) {
+          return logInfo(response.data, 'Telegram message sent');
         }
-        throw data;
+        throw response;
       })
       .catch(error => logError(error, 'Error on sending telegram message'));
   }

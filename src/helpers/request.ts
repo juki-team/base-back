@@ -1,22 +1,23 @@
+import { HTTPMethod } from '@juki-team/commons';
 import axios from 'axios';
 import { IncomingMessage } from 'http';
 import https from 'https';
 import { logInfo, logMessage } from './log';
 
-export const fetcherHttps = ({
+export const fetcherHttps_deprecated = ({
   hostname = '',
   path = '/',
-  method = 'GET',
+  method = HTTPMethod.GET,
   uri = '',
   body = {},
-}: { hostname?: string, path?: string, method?: string, uri?: string, body?: Object }) => new Promise((resolve, reject) => {
-  if (method === 'POST') {
+}: { hostname?: string, path?: string, method?: HTTPMethod, uri?: string, body?: Object }) => new Promise((resolve, reject) => {
+  if (method === HTTPMethod.POST) {
     const postData = JSON.stringify(body);
     const options = {
       hostname,
       port: 443,
       path,
-      method: 'POST',
+      method: HTTPMethod.POST,
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': postData.length,
@@ -35,7 +36,7 @@ export const fetcherHttps = ({
     req.write(postData);
     req.end();
     
-  } else if (method === 'GET') {
+  } else if (method === HTTPMethod.GET) {
     const url = uri || hostname + path;
     https.get(url, (response: IncomingMessage) => {
       logMessage('statusCode: ' + response.statusCode);
@@ -47,12 +48,17 @@ export const fetcherHttps = ({
   }
 });
 
-export const fetcherAxios = async ({ method = 'GET', url, body = {} }: { method?: string, url: string, body?: Object }) => {
+export const fetcherAxios = async ({
+  method = 'GET',
+  url,
+  body = {},
+  config,
+}: { method?: string, url: string, body?: Object, config?: { timeout: number } }) => {
   if (method === 'POST') {
     logInfo({ url, method, body }, 'fetcherAxios POST');
-    return await axios.post(url, body, { timeout: 900000 });
+    return await axios.post(url, body, config);
   } else if (method === 'GET') {
     logInfo({ url, method }, 'fetcherAxios GET');
-    return await axios.get(url, { timeout: 900000 });
+    return await axios.get(url, config);
   }
 };
