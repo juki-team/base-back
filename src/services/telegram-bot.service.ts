@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import * as util from 'util';
-import { logError, logInfo, logMessage } from '../helpers';
+import { logError, logInfo, logMessage } from '../helpers/log';
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN?: string;
