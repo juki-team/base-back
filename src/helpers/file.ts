@@ -18,4 +18,4 @@ export const getFiles = (dir: string, recursive: true, files__?: string[]) => {
   return files_;
 };
 
-export const removeFolder = (folderPath: string, { recursive = false }: { recursive: boolean }) => fs.promises.rmdir(folderPath, { recursive });
+export const removeFolder = (folderPath: string, { recursive = false, force = true }: { recursive: boolean, force: boolean }) => fs.promises.rm(folderPath, { recursive, force });
