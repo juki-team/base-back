@@ -8,7 +8,7 @@ export type ResponseError = (error: JkError, options?: ResponseOptionsType, ...r
 export type ResponseContents = <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => void;
 export type ResponseContent = <T, >(content: T, options?: ResponseOptionsType) => void;
 
-const getRequestData = (request: Request) => {
+export const getRequestData = (request: Request) => {
   return {
     method: request.method,
     originalUrl: request.originalUrl,
