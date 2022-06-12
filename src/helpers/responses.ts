@@ -10,11 +10,11 @@ export type ResponseContent = <T, >(content: T, options?: ResponseOptionsType) =
 
 const getRequestData = (request: Request) => {
   return {
-    query: request.query,
     method: request.method,
     originalUrl: request.originalUrl,
     baseUrl: request.baseUrl,
     path: request.path,
+    query: request.query,
     body: request.body,
   };
 };
