@@ -17,7 +17,6 @@ import { Response500, ResponseContent, ResponseContents, ResponseError } from '.
 declare global {
   namespace Express {
     export interface Response {
-      send500: Response500,
       sendError: ResponseError,
       sendContents: ResponseContents,
       sendContent: ResponseContent,

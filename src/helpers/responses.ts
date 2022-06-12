@@ -19,27 +19,15 @@ export const getRequestData = (request: Request) => {
   };
 };
 
-export const response500 = (request: Request, response: Response) => (error: JkError, options?: { message?: string }, ...restErrors: JkError[]) => {
-  
-  const { message: _message } = options || {};
-  
-  const message = _message || error?.message;
-  const errors = [error, ...restErrors];
-  
-  const logMessage = `500: ${message}`;
-  jkLogTelegramBot.sendErrorMessage(logMessage, errors, getRequestData(request));
-  
-  return response.status(500).send(errorsResponse(message, ...errors));
-};
-
 export const responseError = (request: Request, response: Response) => (error: JkError, options?: ResponseOptionsType, ...restErrors: JkError[]) => {
   
-  const { message: _message, status: _status, notify } = options || {};
+  const { message: _message, status: _status } = options || {};
+  let { notify } = options || {};
   
   const errors = [error, ...restErrors];
   
   if (errors.some(error => error.code === ErrorCode.ERR500 || !ERROR[error.code])) {
-    return response500(request, response)(error, { message: _message }, ...restErrors);
+    notify = true;
   }
   
   const message = _message || error.message;
@@ -49,7 +37,10 @@ export const responseError = (request: Request, response: Response) => (error: J
     jkLogTelegramBot.sendErrorMessage(`${status}: ${message}`, errors, getRequestData(request));
   }
   
-  return response.status(status).send(errorsResponse(message, ...errors));
+  if (!response.headersSent) {
+    return response.status(status).send(errorsResponse(message, ...errors));
+  }
+  
 };
 
 export const responseContents = (request: Request, response: Response) => <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => {
