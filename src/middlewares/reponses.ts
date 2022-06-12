@@ -3,9 +3,9 @@ import { response500, responseContent, responseContents, responseError } from '.
 import { JkResponse } from '../types';
 
 export const responsesMiddleware = (req: Request, res: JkResponse, next: NextFunction) => {
-  res.send500 = response500(res);
-  res.sendError = responseError(res);
-  res.sendContents = responseContents(res);
-  res.sendContent = responseContent(res);
+  res.send500 = response500(req, res);
+  res.sendError = responseError(req, res);
+  res.sendContents = responseContents(req, res);
+  res.sendContent = responseContent(req, res);
   next();
 };

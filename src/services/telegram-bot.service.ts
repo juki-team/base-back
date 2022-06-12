@@ -66,9 +66,10 @@ export class TelegramBotService {
       .catch(error => logError(error, 'Error on sending telegram message'));
   }
   
-  sendErrorMessage(title: string, error: any) {
+  sendErrorMessage(title: string, error: any, request?: any) {
     logError(error, title);
     const errorText = util.inspect(error, { depth: 5, compact: false }).substring(0, this.maxSizeText);
+    const requestText = util.inspect(request, { depth: 5, compact: false }).substring(0, this.maxSizeText);
     
     const message = [
       this._HEADER,
@@ -76,6 +77,10 @@ export class TelegramBotService {
       this.escape(title),
       '```',
       this.escape(errorText.length === this.maxSizeText ? errorText + '\n...message to large...' : errorText),
+      '```',
+      '*REQUEST*',
+      '```',
+      this.escape(requestText.length === this.maxSizeText ? requestText + '\n...message to large...' : requestText),
       '```',
     ].join('\n');
     return this.sendMessage(message);

@@ -1,13 +1,5 @@
-import {
-  contentResponse,
-  ContentsMetaType,
-  contentsResponse,
-  ERROR,
-  ErrorCode,
-  errorsResponse,
-  JkError,
-} from '@juki-team/commons';
-import { Response } from 'express';
+import { contentResponse, ContentsMetaType, contentsResponse, ERROR, ErrorCode, errorsResponse, JkError } from '@juki-team/commons';
+import { Request, Response } from 'express';
 import { jkLogTelegramBot } from '../services';
 import { ResponseOptionsType } from '../types';
 
@@ -16,7 +8,18 @@ export type ResponseError = (error: JkError, options?: ResponseOptionsType, ...r
 export type ResponseContents = <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => void;
 export type ResponseContent = <T, >(content: T, options?: ResponseOptionsType) => void;
 
-export const response500 = (response: Response) => (error: JkError, options?: { message?: string }, ...restErrors: JkError[]) => {
+const getRequestData = (request: Request) => {
+  return {
+    body: request.body,
+    query: request.query,
+    method: request.method,
+    originalUrl: request.originalUrl,
+    baseUrl: request.baseUrl,
+    path: request.path,
+  };
+};
+
+export const response500 = (request: Request, response: Response) => (error: JkError, options?: { message?: string }, ...restErrors: JkError[]) => {
   
   const { message: _message } = options || {};
   
@@ -24,32 +27,32 @@ export const response500 = (response: Response) => (error: JkError, options?: { 
   const errors = [error, ...restErrors];
   
   const logMessage = `500: ${message}`;
-  jkLogTelegramBot.sendErrorMessage(logMessage, errors);
+  jkLogTelegramBot.sendErrorMessage(logMessage, errors, getRequestData(request));
   
   return response.status(500).send(errorsResponse(message, ...errors));
 };
 
-export const responseError = (response: Response) => (error: JkError, options?: ResponseOptionsType, ...restErrors: JkError[]) => {
+export const responseError = (request: Request, response: Response) => (error: JkError, options?: ResponseOptionsType, ...restErrors: JkError[]) => {
   
   const { message: _message, status: _status, notify } = options || {};
   
   const errors = [error, ...restErrors];
   
   if (errors.some(error => error.code === ErrorCode.ERR500 || !ERROR[error.code])) {
-    return response500(response)(error, { message: _message }, ...restErrors);
+    return response500(request, response)(error, { message: _message }, ...restErrors);
   }
   
   const message = _message || error.message;
   const status = _status || ERROR[error.code].status;
   
   if (notify) {
-    jkLogTelegramBot.sendErrorMessage(`${status}: ${message}`, errors);
+    jkLogTelegramBot.sendErrorMessage(`${status}: ${message}`, errors, getRequestData(request));
   }
   
   return response.status(status).send(errorsResponse(message, ...errors));
 };
 
-export const responseContents = (response: Response) => <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => {
+export const responseContents = (request: Request, response: Response) => <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => {
   
   const { message: _message, status: _status, notify } = options || {};
   
@@ -57,13 +60,13 @@ export const responseContents = (response: Response) => <T, >(contents: T[], met
   const status = _status || 200;
   
   if (notify) {
-    jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { contents, meta });
+    jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { contents, meta, request: getRequestData(request) });
   }
   
   return response.status(status).send(contentsResponse(message, contents, meta));
 };
 
-export const responseContent = (response: Response) => <T, >(content: T, options?: ResponseOptionsType) => {
+export const responseContent = (request: Request, response: Response) => <T, >(content: T, options?: ResponseOptionsType) => {
   
   const { message: _message, status: _status, notify } = options || {};
   
@@ -71,7 +74,7 @@ export const responseContent = (response: Response) => <T, >(content: T, options
   const status = _status || 200;
   
   if (notify) {
-    jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { content });
+    jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { content, request: getRequestData(request) });
   }
   return response.status(status).send(contentResponse(message, content));
 };
