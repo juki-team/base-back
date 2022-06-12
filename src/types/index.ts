@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Response500, ResponseContent, ResponseContents, ResponseError } from '../helpers';
+import { ResponseContent, ResponseContents, ResponseError } from '../helpers';
 
 export type ResponseOptionsType = { message?: string, notify?: boolean, status?: number };
 

@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import { jkLogTelegramBot } from '../services';
 import { ResponseOptionsType } from '../types';
 
-export type Response500 = (error: JkError, options?: { message?: string }, ...restErrors: JkError[]) => void;
 export type ResponseError = (error: JkError, options?: ResponseOptionsType, ...restErrors: JkError[]) => void;
 export type ResponseContents = <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => void;
 export type ResponseContent = <T, >(content: T, options?: ResponseOptionsType) => void;
@@ -15,6 +14,7 @@ export const getRequestData = (request: Request) => {
     baseUrl: request.baseUrl,
     path: request.path,
     query: request.query,
+    headers: request.headers,
     body: request.body,
   };
 };
@@ -26,7 +26,7 @@ export const responseError = (request: Request, response: Response) => (error: J
   
   const errors = [error, ...restErrors];
   
-  if (errors.some(error => error.code === ErrorCode.ERR500 || !ERROR[error.code])) {
+  if (errors.some(error => error.code === ErrorCode.ERR500 || !ERROR[error.code] || ERROR[error.code]?.status >= 500 || ERROR[error.code]?.status < 400)) {
     notify = true;
   }
   

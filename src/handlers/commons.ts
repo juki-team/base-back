@@ -9,7 +9,7 @@ export function routerGetPing(request: Request, response: JkResponse) {
   try {
     response.sendContent('pong');
   } catch (error) {
-    response.send500(toJkError(error), { message: 'Error handling "routerGetPing"' });
+    response.sendError(toJkError(error), { message: 'Error handling "routerGetPing"', notify: true });
   }
 }
 
@@ -17,7 +17,7 @@ export function routerGetVersion(request: Request, response: JkResponse) {
   try {
     response.sendContent(VERSION);
   } catch (error) {
-    response.send500(toJkError(error), { message: 'Error handling "routerGetVersion"' });
+    response.sendError(toJkError(error), { message: 'Error handling "routerGetVersion"', notify: true });
   }
 }
 
@@ -25,7 +25,7 @@ export function routerGetEnv(request: Request, response: JkResponse) {
   try {
     response.sendContent(NODE_ENV);
   } catch (error) {
-    response.send500(toJkError(error), { message: 'Error handling "routerGetEnv"' });
+    response.sendError(toJkError(error), { message: 'Error handling "routerGetEnv"', notify: true });
   }
 }
 
@@ -38,7 +38,7 @@ export function routerGetStatus(request: Request, response: JkResponse) {
       freemem: os.freemem(),
     });
   } catch (error) {
-    response.send500(toJkError(error), { message: 'Error handling "routerGetStatus"' });
+    response.sendError(toJkError(error), { message: 'Error handling "routerGetStatus"', notify: true });
   }
 }
 
@@ -46,7 +46,10 @@ export function routerGetLsFolderPath(request: Request<{ folderPath: string }>, 
   try {
     response.sendContent(fs.readdirSync(request.params.folderPath));
   } catch (error) {
-    response.send500(toJkError(error), { message: 'Error handling "routerGetLsFolderPath" /ls/' + request.params.folderPath });
+    response.sendError(toJkError(error), {
+      message: 'Error handling "routerGetLsFolderPath" /ls/' + request.params.folderPath,
+      notify: true,
+    });
   }
 }
 
@@ -54,6 +57,9 @@ export function routerGetCatFilePath(request: Request<{ filePath: string }>, res
   try {
     response.sendContent(fs.readFileSync(request.params.filePath, 'utf8'));
   } catch (error) {
-    response.send500(toJkError(error), { message: 'Error handling "routerGetCatFilePath" /cat/' + request.params.filePath });
+    response.sendError(toJkError(error), {
+      message: 'Error handling "routerGetCatFilePath" /cat/' + request.params.filePath,
+      notify: true,
+    });
   }
 }

@@ -12,7 +12,7 @@ import {
   responsesMiddleware,
 } from '../middlewares';
 import { logMessage } from './log';
-import { Response500, ResponseContent, ResponseContents, ResponseError } from './responses';
+import { ResponseContent, ResponseContents, ResponseError } from './responses';
 
 declare global {
   namespace Express {
