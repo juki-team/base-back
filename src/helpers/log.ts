@@ -1,5 +1,6 @@
 import { LogLevel } from '@juki-team/commons';
-import util from 'node:util';
+import * as util from 'node:util';
+// import util from 'node:util';
 // import { inspect } from 'util';
 import { LOG_LEVEL } from '../config';
 
