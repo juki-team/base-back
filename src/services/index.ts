@@ -1,3 +1,3 @@
 export * from './aws';
-export * from './telegram-bot.service';
-export * from './telegram-bot';
+export * from './multer';
+export * from './telegram';

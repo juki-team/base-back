@@ -1,6 +1,6 @@
 import { ERROR, ErrorCode, errorsResponse, JkError } from '@juki-team/commons';
 import { NextFunction, Request, Response } from 'express';
-import { jkLogTelegramBot } from '../services/telegram-bot';
+import { jkLogTelegramBot } from '../services/telegram/telegram-bot';
 
 /*
  https://github.com/visionmedia/supertest/issues/416
