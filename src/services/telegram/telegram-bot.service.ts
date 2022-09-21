@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import * as util from 'util';
+import * as util from 'node:util';
 import { logError, logInfo, logMessage } from '../../helpers/log';
 
 export class TelegramBotService {
