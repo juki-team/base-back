@@ -1,20 +1,10 @@
 import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
+import { PublicFilesFolder, PublicImagesFolder } from '../../types';
 import { AWS, AWS_S3_JUKI_FILES_PUBLIC_BUCKET, AWS_S3_JUKI_IMAGES_PUBLIC_BUCKET } from './config';
 
 export const s3 = new AWS.S3({});
-
-enum PublicImagesFolder {
-  O = 'o', // image original
-  T = 't', // image thumbnail
-  U = 'u', // user images
-}
-
-enum PublicFilesFolder {
-  SHARED = 'shared', // files to share
-  TEMP = 'temp', // temporal files
-}
 
 export const uploadPublicFileOrImage = (bucket: string) => async ({
   data,

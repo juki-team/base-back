@@ -8,3 +8,14 @@ export interface JkResponse extends Response {
   sendContents: ResponseContents,
   sendContent: ResponseContent,
 }
+
+export enum PublicImagesFolder {
+  O = 'o', // image original
+  T = 't', // image thumbnail
+  U = 'u', // user images
+}
+
+export enum PublicFilesFolder {
+  SHARED = 'shared', // files to share
+  TEMP = 'temp', // temporal files
+}
