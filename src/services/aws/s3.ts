@@ -13,6 +13,7 @@ export const uploadPublicFileOrImage = (bucket: string) => async ({
   folder,
   nameDataHashed = false,
 }: { data: any, type: string, extension?: string, folder: PublicImagesFolder | PublicFilesFolder, nameDataHashed?: boolean }) => {
+  console.log({ data, type, _extension, folder, nameDataHashed, bucket, AWS_S3_JUKI_FILES_PUBLIC_BUCKET, AWS_S3_JUKI_IMAGES_PUBLIC_BUCKET });
   const extension = _extension || mime.extension(type);
   const name = nameDataHashed ? crypto.createHash('sha256').update(data, 'utf-8').digest('hex') : uuidv4();
   const key = `${folder}/${name}.${extension}`;
