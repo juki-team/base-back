@@ -1,6 +1,7 @@
 import { ERROR, ErrorCode, errorsResponse, JkError } from '@juki-team/commons';
 import { NextFunction, Request, Response } from 'express';
 import { jkLogTelegramBot } from '../services/telegram/telegram-bot';
+import { JkResponse } from '../types';
 
 /*
  https://github.com/visionmedia/supertest/issues/416
@@ -45,4 +46,8 @@ export function failSafeHandler(err: any, request: Request, response: Response, 
       err?.message || ERROR[ErrorCode.ERR500].message,
       new JkError(ErrorCode.ERR500, { message: err?.message, stack: err?.stack }),
     ));
+}
+
+export function notFoundResponse(req: Request, res: JkResponse, next: NextFunction) {
+  res.sendError(new JkError(ErrorCode.ERR404));
 }
