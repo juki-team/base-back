@@ -1,6 +1,6 @@
 {
   "name": "@juki-team/base-back",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "license": "MIT",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -21,7 +21,6 @@
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/mime-types": "^2.1.1",
-    "@types/multer": "^1.4.7",
     "@types/node": "^17.0.21",
     "@types/uuid": "^8.3.4",
     "rollup": "^2.70.2",
@@ -30,7 +29,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@juki-team/commons": "^0.0.172",
+    "@juki-team/commons": "^0.0.175",
     "aws-sdk": "^2.1220.0",
     "axios": "^0.26.1",
     "cookie-parser": "^1.4.6",
@@ -38,7 +37,6 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "mime-types": "^2.1.35",
-    "multer": "^1.4.5-lts.1",
     "uuid": "^9.0.0"
   }
 }
