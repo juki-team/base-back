@@ -3,8 +3,9 @@ import * as util from 'node:util';
 import { logError, logInfo, logMessage } from '../../helpers/log';
 
 export class TelegramBotService {
-  _JUKI_LOGS_BOT_TOKEN?: string;
-  _JUKI_LOGS_CHAT_ID?: string;
+  _JUKI_LOGS_BOT_TOKEN: string = '';
+  _JUKI_LOGS_CHAT_ID: string = '';
+  _JUKI_ERRORS_CHAT_ID: string = '';
   _HEADER?: string;
   _fetcher: (url: string, options?: any) => Promise<AxiosResponse>;
   readonly maxSizeText = 2000;
@@ -16,9 +17,10 @@ export class TelegramBotService {
     this._fetcher = fetcher;
   }
   
-  config(jukiLogsBotToken: string, jukiLogsChatId: string, header: string, fetcher?: (url: string, options?: any) => Promise<any>) {
+  config(jukiLogsBotToken: string, jukiLogsChatId: string, jukiErrorsChatId: string, header: string, fetcher?: (url: string, options?: any) => Promise<any>) {
     this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     this._JUKI_LOGS_CHAT_ID = jukiLogsChatId;
+    this._JUKI_ERRORS_CHAT_ID = jukiErrorsChatId;
     this._HEADER = header;
     if (fetcher) {
       this._fetcher = fetcher;
@@ -48,14 +50,14 @@ export class TelegramBotService {
       .split('!').join('\\!');
   }
   
-  sendMessage(markdownV2Text: string) {
-    if (!this._JUKI_LOGS_BOT_TOKEN || !this._JUKI_LOGS_BOT_TOKEN || !this._HEADER) {
+  sendMessage(markdownV2Text: string, chatId: string) {
+    if (!this._JUKI_LOGS_BOT_TOKEN || !this._JUKI_ERRORS_CHAT_ID || !this._JUKI_LOGS_BOT_TOKEN || !this._HEADER) {
       return logMessage('PLEASE SET UP THE \'TelegramBotService\'');
     }
     logMessage('Sending Telegram log...');
     return this._fetcher(
       `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
-      `sendMessage?chat_id=${this._JUKI_LOGS_CHAT_ID}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`,
+      `sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`,
     )
       .then(response => {
         if (response.data.ok) {
@@ -83,7 +85,7 @@ export class TelegramBotService {
       this.escape(requestText.length === this.maxSizeText ? requestText + '\n...message to large...' : requestText),
       '```',
     ].join('\n');
-    return this.sendMessage(message);
+    return this.sendMessage(message, this._JUKI_ERRORS_CHAT_ID);
   }
   
   sendInfoMessage(title: string, content: any) {
@@ -98,6 +100,6 @@ export class TelegramBotService {
       this.escape(contentText.length === this.maxSizeText ? contentText + '\n...message to large...' : contentText),
       '```',
     ].join('\n');
-    return this.sendMessage(message);
+    return this.sendMessage(message, this._JUKI_LOGS_CHAT_ID);
   }
 }
