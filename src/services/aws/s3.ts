@@ -8,7 +8,7 @@ import { AWS } from './config';
 
 export const s3 = new AWS.S3({});
 
-export const s3UploadFile = (bucket: string) => async ({
+export const s3PutObject = (bucket: string) => async ({
   data,
   type,
   extension: _extension,
