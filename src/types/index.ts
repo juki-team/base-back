@@ -21,5 +21,5 @@ export enum FilesJukiPub {
 }
 
 export enum FilesJukiPrivate {
-  testCases = 'test-cases',
+  TEST_CASES = 'test-cases',
 }
