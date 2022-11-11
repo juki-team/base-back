@@ -9,13 +9,17 @@ export interface JkResponse extends Response {
   sendContent: ResponseContent,
 }
 
-export enum PublicImagesFolder {
+export enum ImagesJukiPub {
   O = 'o', // image original
   T = 't', // image thumbnail
   U = 'u', // user images
 }
 
-export enum PublicFilesFolder {
+export enum FilesJukiPub {
   SHARED = 'shared', // files to share
   TEMP = 'temp', // temporal files
+}
+
+export enum FilesJukiPrivate {
+  testCases = 'test-cases',
 }

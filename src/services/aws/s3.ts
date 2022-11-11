@@ -3,7 +3,7 @@ import { DeleteObjectOutput } from 'aws-sdk/clients/s3';
 import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
-import { PublicFilesFolder, PublicImagesFolder } from '../../types';
+import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub } from '../../types';
 import { AWS } from './config';
 
 export const s3 = new AWS.S3({});
@@ -15,7 +15,7 @@ export const s3PutObject = (bucket: string) => async ({
   folder,
   nameDataHashed = false,
   name: _name,
-}: { body: any, contentType: string, extension?: string, folder: PublicImagesFolder | PublicFilesFolder, nameDataHashed?: boolean, name?: string }) => {
+}: { body: any, contentType: string, extension?: string, folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate, nameDataHashed?: boolean, name?: string }) => {
   const extension = _extension || mime.extension(contentType);
   const name = nameDataHashed ? crypto.createHash('sha256').update(body, 'utf-8').digest('hex') : (_name ? _name : uuidv4());
   const key = `${folder}/${name}.${extension}`;
