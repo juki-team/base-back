@@ -9,22 +9,22 @@ import { AWS } from './config';
 export const s3 = new AWS.S3({});
 
 export const s3PutObject = (bucket: string) => async ({
-  data,
-  type,
+  body,
+  contentType,
   extension: _extension,
   folder,
   nameDataHashed = false,
   name: _name,
-}: { data: any, type: string, extension?: string, folder: PublicImagesFolder | PublicFilesFolder, nameDataHashed?: boolean, name?: string }) => {
-  const extension = _extension || mime.extension(type);
-  const name = nameDataHashed ? crypto.createHash('sha256').update(data, 'utf-8').digest('hex') : (_name ? _name : uuidv4());
+}: { body: any, contentType: string, extension?: string, folder: PublicImagesFolder | PublicFilesFolder, nameDataHashed?: boolean, name?: string }) => {
+  const extension = _extension || mime.extension(contentType);
+  const name = nameDataHashed ? crypto.createHash('sha256').update(body, 'utf-8').digest('hex') : (_name ? _name : uuidv4());
   const key = `${folder}/${name}.${extension}`;
   
   const params = {
     Bucket: bucket,
     Key: key,
-    Body: data,
-    ContentType: type,
+    Body: body,
+    ContentType: contentType,
   };
   return { ...await s3.putObject(params).promise(), bucket, folder, name, extension, key };
 };
