@@ -17,14 +17,17 @@ export class TelegramBotService {
     this._fetcher = fetcher;
   }
   
-  config(jukiLogsBotToken: string, jukiInfoLogsChatId: string, jukiErrorLogsChatId: string, header: string, fetcher?: (url: string, options?: any) => Promise<any>) {
+  config(jukiLogsBotToken: string, jukiInfoLogsChatId: string, jukiErrorLogsChatId: string, fetcher?: (url: string, options?: any) => Promise<any>) {
     this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     this._JUKI_INFO_LOGS_CHAT_ID = jukiInfoLogsChatId;
     this._JUKI_ERROR_LOGS_CHAT_ID = jukiErrorLogsChatId;
-    this._HEADER = header;
     if (fetcher) {
       this._fetcher = fetcher;
     }
+  }
+  
+  setHeader(header: string) {
+    this._HEADER = header;
   }
   
   // https://core.telegram.org/bots/api#markdownv2-style
