@@ -17,7 +17,7 @@ export const ecsCluster = (cluster: string) => ({
   listTasks: async () => (
     await awsEcs.listTasks({ cluster }).promise()
   ),
-  describeTasks: async (tasks: AWS.ECS.StringList) => (
+  describeTasks: async ({ tasks }: { tasks: AWS.ECS.StringList }) => (
     await awsEcs.describeTasks({ cluster, tasks }).promise()
   ),
   stopTask: async ({ task }: { task: string }) => (
