@@ -2,12 +2,6 @@ import { AWS } from './config';
 
 export const awsSqs = new AWS.SQS({ apiVersion: '2012-11-05' });
 
-type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
-  ? Acc[number]
-  : Enumerate<N, [...Acc, Acc['length']]>
-
-type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
-
 export const sqsQueue = (queueUrl: string) => ({
   deleteMessage: async ({ receiveMessageResult }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult }) => {
     return await awsSqs.deleteMessage({
@@ -15,7 +9,7 @@ export const sqsQueue = (queueUrl: string) => ({
       ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
     }).promise();
   },
-  receiveMessage: async (props: { visibilityTimeout: IntRange<0, 999>, waitTimeSeconds: IntRange<0, 20> }) => {
+  receiveMessage: async (props?: { visibilityTimeout: number, waitTimeSeconds: number }) => {
     const { visibilityTimeout = 900, waitTimeSeconds = 20 } = props || {};
     const params: AWS.SQS.Types.ReceiveMessageRequest = {
       QueueUrl: queueUrl,
@@ -26,7 +20,6 @@ export const sqsQueue = (queueUrl: string) => ({
       MessageAttributeNames: [
         'All',
       ],
-      // VisibilityTimeout: 300,
       VisibilityTimeout: visibilityTimeout, // Should be between 0 seconds and 12 hours.
       WaitTimeSeconds: waitTimeSeconds, // Should be between 0 and 20 seconds.
     };
@@ -55,7 +48,7 @@ export const sqsQueue = (queueUrl: string) => ({
   changeMessageVisibility: async ({
     receiveMessageResult,
     visibilityTimeout,
-  }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult, visibilityTimeout: IntRange<0, 999> }) => (
+  }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult, visibilityTimeout: number }) => (
     await awsSqs.changeMessageVisibility({
       QueueUrl: queueUrl,
       ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
