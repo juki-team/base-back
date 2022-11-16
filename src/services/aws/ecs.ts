@@ -20,10 +20,10 @@ export const ecsCluster = (cluster: string) => ({
   describeTasks: async (tasks: AWS.ECS.StringList) => (
     await awsEcs.describeTasks({ cluster, tasks }).promise()
   ),
-  stopTask: async (task: string) => (
+  stopTask: async ({ task }: { task: string }) => (
     await awsEcs.stopTask({ cluster, task }).promise()
   ),
-  runTask: async (taskDefinition: string) => (
+  runTask: async ({ taskDefinition }: { taskDefinition: string }) => (
     await awsEcs.runTask({
       launchType: 'FARGATE',
       cluster,
