@@ -52,6 +52,16 @@ export const sqsQueue = (queueUrl: string) => ({
       MessageGroupId: messageGroupId,
     }).promise();
   },
+  changeMessageVisibility: async ({
+    receiveMessageResult,
+    visibilityTimeout,
+  }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult, visibilityTimeout: IntRange<0, 999> }) => (
+    await awsSqs.changeMessageVisibility({
+      QueueUrl: queueUrl,
+      ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
+      VisibilityTimeout: visibilityTimeout,
+    })
+  ),
   getQueueAttributes: async () => {
     return await awsSqs.getQueueAttributes({ QueueUrl: queueUrl, AttributeNames: ['All'] }).promise();
   },
