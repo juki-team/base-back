@@ -1,6 +1,6 @@
 import { AWS } from './config';
 
-export const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+export const awsSqs = new AWS.SQS({ apiVersion: '2012-11-05' });
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
   ? Acc[number]
@@ -10,7 +10,7 @@ type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumer
 
 export const sqsQueue = (queueUrl: string) => ({
   deleteMessage: async ({ receiveMessageResult }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult }) => {
-    return await sqs.deleteMessage({
+    return await awsSqs.deleteMessage({
       QueueUrl: queueUrl,
       ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
     }).promise();
@@ -30,14 +30,14 @@ export const sqsQueue = (queueUrl: string) => ({
       VisibilityTimeout: visibilityTimeout, // Should be between 0 seconds and 12 hours.
       WaitTimeSeconds: waitTimeSeconds, // Should be between 0 and 20 seconds.
     };
-    return await sqs.receiveMessage(params).promise();
+    return await awsSqs.receiveMessage(params).promise();
   },
   sendMessage: async ({
     messageBody,
     messageDeduplicationId,
     messageGroupId,
   }: { messageBody: string, messageDeduplicationId: string, messageGroupId: string }) => {
-    return await sqs.sendMessage({
+    return await awsSqs.sendMessage({
       // Remove DelaySeconds parameter and value for FIFO queues
       // DelaySeconds: 10,
       MessageAttributes: {
@@ -53,6 +53,6 @@ export const sqsQueue = (queueUrl: string) => ({
     }).promise();
   },
   getQueueAttributes: async () => {
-    return await sqs.getQueueAttributes({ QueueUrl: queueUrl, AttributeNames: ['All'] }).promise();
+    return await awsSqs.getQueueAttributes({ QueueUrl: queueUrl, AttributeNames: ['All'] }).promise();
   },
 });

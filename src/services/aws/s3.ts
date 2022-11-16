@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub } from '../../types';
 import { AWS } from './config';
 
-export const s3 = new AWS.S3({});
+export const awsS3 = new AWS.S3({});
 
 export const s3Bucket = (bucket: string) => ({
   putObject: async ({
@@ -27,11 +27,11 @@ export const s3Bucket = (bucket: string) => ({
       Body: body,
       ContentType: contentType,
     };
-    return { ...await s3.putObject(params).promise(), bucket, folder, name, extension, key };
+    return { ...await awsS3.putObject(params).promise(), bucket, folder, name, extension, key };
   },
   getObject: ({ key }: { key: string }) => {
     return new Promise<string>((resolve, reject) => {
-      s3.getObject({ Bucket: bucket, Key: key }, async function (err, data) {
+      awsS3.getObject({ Bucket: bucket, Key: key }, async function (err, data) {
         if (err) {
           reject(err);
         } else {
@@ -46,7 +46,7 @@ export const s3Bucket = (bucket: string) => ({
   },
   deleteObject: ({ key }: { key: string }) => {
     return new Promise<DeleteObjectOutput>((resolve, reject) => {
-      s3.deleteObject({ Bucket: bucket, Key: key }, async function (err, data) {
+      awsS3.deleteObject({ Bucket: bucket, Key: key }, async function (err, data) {
         if (err) {
           reject(err);
         } else {
@@ -61,7 +61,7 @@ export const s3Bucket = (bucket: string) => ({
       Prefix: prefix,
       MaxKeys: 10000,
     };
-    return s3.listObjects(bucketParams).promise();
+    return awsS3.listObjects(bucketParams).promise();
   },
   listAllObjects: async ({ prefix }: { prefix: string }) => {
     let isTruncated = true;
@@ -72,7 +72,7 @@ export const s3Bucket = (bucket: string) => ({
       if (prefix) params.Prefix = prefix;
       if (marker) params.Marker = marker;
       try {
-        const response = await s3.listObjects(params).promise();
+        const response = await awsS3.listObjects(params).promise();
         response.Contents?.forEach(item => elements.push(item));
         isTruncated = !!response.IsTruncated;
         if (isTruncated) {
