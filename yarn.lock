@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@juki-team/commons@^0.0.184":
-  version "0.0.184"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.184/db51748b4e5424a23aaad31548de48bbf5b2f3c3#db51748b4e5424a23aaad31548de48bbf5b2f3c3"
-  integrity sha512-5++iwI9pnpmP2cydQDYuSGmkpur2WbRCfGNr3G6lEGdrX0s9oBbb77bhEDHKSshMm8Q3U1Gj9+kI3+TiKFtdPQ==
+"@juki-team/commons@^0.0.185":
+  version "0.0.185"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.185/842f0f0479a979b1d05304d780be67b3ab2c0dbd#842f0f0479a979b1d05304d780be67b3ab2c0dbd"
+  integrity sha512-1t+X5SgpdalNHk4lN827rJPMqNksASFmlns0HMhdHQfKnmfdIVABiu1c0mS5pPWB7z4Jv6Fd0Wcemnor3AV7oA==
 
 "@rollup/pluginutils@^4.1.2":
   version "4.2.1"

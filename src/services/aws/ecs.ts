@@ -1,58 +1,41 @@
 import { AWS } from './config';
 
-export const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+export const awsEcs = new AWS.ECS();
 
-type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
-  ? Acc[number]
-  : Enumerate<N, [...Acc, Acc['length']]>
+// TODO put on ENV
+const subnets = ['subnet-4231374c', 'subnet-d08fc68f', 'subnet-611b072c', 'subnet-8bf5beaa', 'subnet-c14bdbf0', 'subnet-14327e72'];
+const securityGroups = ['sg-020d888fae3cf28f6'];
 
-type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+export const ecs = () => ({
+  describeTaskDefinition: async ({ taskDefinition }: { taskDefinition: string }) => (
+    await awsEcs.describeTaskDefinition({ taskDefinition }).promise()
+  ),
+  listTaskDefinitions: async () => await awsEcs.listTaskDefinitions({}).promise(),
+});
 
-export const sqsQueue = (queueUrl: string) => ({
-  deleteMessage: async ({ receiveMessageResult }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult }) => {
-    return await sqs.deleteMessage({
-      QueueUrl: queueUrl,
-      ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
-    }).promise();
-  },
-  receiveMessage: async (props: { visibilityTimeout: IntRange<0, 999>, waitTimeSeconds: IntRange<0, 20> }) => {
-    const { visibilityTimeout = 900, waitTimeSeconds = 20 } = props || {};
-    const params: AWS.SQS.Types.ReceiveMessageRequest = {
-      QueueUrl: queueUrl,
-      AttributeNames: [
-        'SentTimestamp',
-      ],
-      MaxNumberOfMessages: 1,
-      MessageAttributeNames: [
-        'All',
-      ],
-      // VisibilityTimeout: 300,
-      VisibilityTimeout: visibilityTimeout, // Should be between 0 seconds and 12 hours.
-      WaitTimeSeconds: waitTimeSeconds, // Should be between 0 and 20 seconds.
-    };
-    return await sqs.receiveMessage(params).promise();
-  },
-  sendMessage: async ({
-    messageBody,
-    messageDeduplicationId,
-    messageGroupId,
-  }: { messageBody: string, messageDeduplicationId: string, messageGroupId: string }) => {
-    return await sqs.sendMessage({
-      // Remove DelaySeconds parameter and value for FIFO queues
-      // DelaySeconds: 10,
-      MessageAttributes: {
-        'Type': {
-          DataType: 'String',
-          StringValue: 'Exec command',
+export const ecsCluster = (cluster: string) => ({
+  listTasks: async () => (
+    await awsEcs.listTasks({ cluster }).promise()
+  ),
+  describeTasks: async (tasks: string[]) => (
+    await awsEcs.describeTasks({ cluster, tasks }).promise()
+  ),
+  stopTask: async (task: string) => (
+    await awsEcs.stopTask({ cluster, task }).promise()
+  ),
+  runTask: async (taskDefinition: string) => (
+    await awsEcs.runTask({
+      launchType: 'FARGATE',
+      cluster,
+      count: 1,
+      taskDefinition,
+      networkConfiguration: {
+        awsvpcConfiguration: {
+          subnets,
+          assignPublicIp: 'ENABLED',
+          securityGroups,
         },
       },
-      QueueUrl: queueUrl,
-      MessageBody: messageBody,
-      MessageDeduplicationId: messageDeduplicationId,
-      MessageGroupId: messageGroupId,
-    }).promise();
-  },
-  getQueueAttributes: async () => {
-    return await sqs.getQueueAttributes({ QueueUrl: queueUrl, AttributeNames: ['All'] }).promise();
-  },
+    }).promise()
+  ),
 });
