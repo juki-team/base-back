@@ -1,6 +1,7 @@
+import { chunkString } from '@juki-team/commons';
 import { AxiosResponse } from 'axios';
 import * as util from 'node:util';
-import { logError, logInfo, logMessage } from '../../helpers/log';
+import { logError, logInfo, logMessage } from '../../helpers';
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN: string = '';
@@ -71,38 +72,50 @@ export class TelegramBotService {
       .catch(error => logError(error, 'Error on sending telegram message'));
   }
   
-  sendErrorMessage(title: string, error: any, request?: any) {
+  async sendErrorMessage(title: string, error: any, request?: any) {
     logError(error, title);
-    const errorText = util.inspect(error, { depth: 5, compact: false }).substring(0, this.maxSizeText);
-    const requestText = util.inspect(request, { depth: 5, compact: false }).substring(0, this.maxSizeText);
+    const errorText = util.inspect(error, { depth: 5, compact: false });
+    const requestText = util.inspect(request, { depth: 5, compact: false });
     
     const message = [
       this._HEADER,
       '*ERROR*',
       this.escape(title),
       '```',
-      this.escape(errorText.length === this.maxSizeText ? errorText + '\n...message to large...' : errorText),
+      this.escape(errorText),
       '```',
       '*REQUEST*',
       '```',
-      this.escape(requestText.length === this.maxSizeText ? requestText + '\n...message to large...' : requestText),
+      this.escape(requestText),
       '```',
     ].join('\n');
-    return this.sendMessage(message, this._JUKI_ERROR_LOGS_CHAT_ID);
+    const messages = chunkString(message, this.maxSizeText);
+    const results = [];
+    for (let i = 0; i < messages.length; i++) {
+      results.push(await this.sendMessage(this.escape(`${i + 1}/${messages.length}\n`) + message, this._JUKI_ERROR_LOGS_CHAT_ID));
+    }
+    return results;
   }
   
-  sendInfoMessage(title: string, content: any) {
+  async sendInfoMessage(title: string, content: any) {
     logInfo(content, title);
-    const contentText = util.inspect(content, { depth: 5, compact: false }).substring(0, this.maxSizeText);
+    const contentText = util.inspect(content, { depth: 5, compact: false });
     
     const message = [
       this._HEADER,
       '*INFO*',
       this.escape(title),
       '```',
-      this.escape(contentText.length === this.maxSizeText ? contentText + '\n...message to large...' : contentText),
+      this.escape(contentText),
       '```',
     ].join('\n');
-    return this.sendMessage(message, this._JUKI_INFO_LOGS_CHAT_ID);
+    
+    const messages = chunkString(message, this.maxSizeText);
+    const results = [];
+    for (let i = 0; i < messages.length; i++) {
+      results.push(await this.sendMessage(this.escape(`${i + 1}/${messages.length}\n`) + message, this._JUKI_INFO_LOGS_CHAT_ID));
+    }
+    
+    return results;
   }
 }
