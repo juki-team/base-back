@@ -92,7 +92,7 @@ export class TelegramBotService {
     const messages = chunkString(message, this.maxSizeText);
     const results = [];
     for (let i = 0; i < messages.length; i++) {
-      results.push(await this.sendMessage(this.escape(`${i + 1}/${messages.length}\n`) + message, this._JUKI_ERROR_LOGS_CHAT_ID));
+      results.push(await this.sendMessage(this.escape(`${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]\n`) + messages[i], this._JUKI_ERROR_LOGS_CHAT_ID));
     }
     return results;
   }
@@ -113,7 +113,7 @@ export class TelegramBotService {
     const messages = chunkString(message, this.maxSizeText);
     const results = [];
     for (let i = 0; i < messages.length; i++) {
-      results.push(await this.sendMessage(this.escape(`${i + 1}/${messages.length}\n`) + message, this._JUKI_INFO_LOGS_CHAT_ID));
+      results.push(await this.sendMessage(this.escape(`${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]\n`) + messages[i], this._JUKI_INFO_LOGS_CHAT_ID));
     }
     
     return results;
