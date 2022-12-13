@@ -78,6 +78,8 @@ export class TelegramBotService {
               data: error.response.data,
               status: error.response.status,
               headers: error.response.headers,
+              chatId,
+              markdownV2Text,
             },
             'Error on sending telegram message',
           );
@@ -86,10 +88,10 @@ export class TelegramBotService {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          logError(error.request, 'Error on sending telegram message');
+          logError({ request: error.request, chatId, markdownV2Text }, 'Error on sending telegram message');
         } else {
           // Something happened in setting up the request that triggered an Error
-          logError(error.message, 'Error on sending telegram message');
+          logError({ message: error.message, chatId, markdownV2Text }, 'Error on sending telegram message');
         }
       });
   }
