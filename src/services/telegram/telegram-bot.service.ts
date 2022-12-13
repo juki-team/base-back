@@ -69,7 +69,29 @@ export class TelegramBotService {
         }
         throw response;
       })
-      .catch(error => logError(error, 'Error on sending telegram message'));
+      .catch(error => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          logError(
+            {
+              data: error.response.data,
+              status: error.response.status,
+              headers: error.response.headers,
+            },
+            'Error on sending telegram message',
+          );
+          
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          logError(error.request, 'Error on sending telegram message');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          logError(error.message, 'Error on sending telegram message');
+        }
+      });
   }
   
   async sendErrorMessage(title: string, error: any, request?: any) {
