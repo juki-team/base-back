@@ -100,18 +100,18 @@ export class TelegramBotService {
     const errorText = util.inspect(error, { depth: 5, compact: false });
     const requestText = util.inspect(request, { depth: 5, compact: false });
     
-    const message = this.escape([
+    const message = [
       this._HEADER,
       '*ERROR*',
-      title,
+      this.escape(title),
       '```',
-      errorText,
+      this.escape(errorText),
       '```',
       '*REQUEST*',
       '```',
-      requestText,
+      this.escape(requestText),
       '```',
-    ].join('\n'));
+    ].join('\n');
     const messages = chunkString(message, this.maxSizeText);
     const results = [];
     for (let i = 0; i < messages.length; i++) {
@@ -124,14 +124,14 @@ export class TelegramBotService {
     logInfo(content, title);
     const contentText = util.inspect(content, { depth: 5, compact: false });
     
-    const message = this.escape([
+    const message = [
       this._HEADER,
       '*INFO*',
-      title,
+      this.escape(title),
       '```',
-      contentText,
+      this.escape(contentText),
       '```',
-    ].join('\n'));
+    ].join('\n');
     
     const messages = chunkString(message, this.maxSizeText);
     const results = [];
