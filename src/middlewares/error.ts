@@ -1,5 +1,6 @@
 import { ERROR, ErrorCode, errorsResponse, JkError } from '@juki-team/commons';
 import { NextFunction, Request, Response } from 'express';
+import { getRequestData } from '../helpers';
 import { jkLogTelegramBot } from '../services/telegram/telegram-bot';
 import { JkResponse } from '../types';
 
@@ -22,7 +23,7 @@ export function errorLoggerHandler(err: any, request: Request, response: Respons
     params,
     error: err.stack,
   };
-  jkLogTelegramBot.sendErrorMessage(`Logging error [[${url}]]`, error);
+  jkLogTelegramBot.sendErrorMessage(`Logging error [[${url}]]`, error, getRequestData(request));
   next(err);
 }
 

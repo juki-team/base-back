@@ -64,7 +64,7 @@ export class TelegramBotService {
     return this._fetcher(url)
       .then(response => {
         if (response.data.ok) {
-          return logInfo(url, 'Telegram message sent');
+          return logMessage('Telegram message sent ' + url);
         }
         throw response;
       })
