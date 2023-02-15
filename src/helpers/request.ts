@@ -55,10 +55,10 @@ export const fetcherAxios = async ({
   config,
 }: { method?: string, url: string, body?: Object, config?: { timeout: number } }) => {
   if (method === 'POST') {
-    logInfo({ url, method, body }, 'fetcherAxios POST');
+    // logInfo({ url, method, body }, 'fetcherAxios POST');
     return await axios.post(url, body, config);
   } else if (method === 'GET') {
-    logInfo({ url, method }, 'fetcherAxios GET');
+    // logInfo({ url, method }, 'fetcherAxios GET');
     return await axios.get(url, config);
   }
 };
