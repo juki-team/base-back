@@ -59,13 +59,12 @@ export class TelegramBotService {
       return logMessage('PLEASE SET UP THE \'TelegramBotService\'');
     }
     logMessage('Sending Telegram log...');
-    return this._fetcher(
-      `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
-      `sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`,
-    )
+    const url = `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
+      `sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`;
+    return this._fetcher(url)
       .then(response => {
         if (response.data.ok) {
-          return logInfo(response.data, 'Telegram message sent');
+          return logInfo(url, 'Telegram message sent');
         }
         throw response;
       })
@@ -101,18 +100,18 @@ export class TelegramBotService {
     const errorText = util.inspect(error, { depth: 5, compact: false });
     const requestText = util.inspect(request, { depth: 5, compact: false });
     
-    const message = [
+    const message = this.escape([
       this._HEADER,
       '*ERROR*',
-      this.escape(title),
+      title,
       '```',
-      this.escape(errorText),
+      errorText,
       '```',
       '*REQUEST*',
       '```',
-      this.escape(requestText),
+      requestText,
       '```',
-    ].join('\n');
+    ].join('\n'));
     const messages = chunkString(message, this.maxSizeText);
     const results = [];
     for (let i = 0; i < messages.length; i++) {
@@ -125,14 +124,14 @@ export class TelegramBotService {
     logInfo(content, title);
     const contentText = util.inspect(content, { depth: 5, compact: false });
     
-    const message = [
+    const message = this.escape([
       this._HEADER,
       '*INFO*',
-      this.escape(title),
+      title,
       '```',
-      this.escape(contentText),
+      contentText,
       '```',
-    ].join('\n');
+    ].join('\n'));
     
     const messages = chunkString(message, this.maxSizeText);
     const results = [];
