@@ -95,10 +95,10 @@ export class TelegramBotService {
       });
   }
   
-  async sendErrorMessage(title: string, error: any, request?: any) {
+  async sendErrorMessage(title: string, error: any, requestData?: any) {
     logError(error, title);
     const errorText = util.inspect(error, { depth: 5, compact: false });
-    const requestText = util.inspect(request, { depth: 5, compact: false });
+    const requestText = util.inspect(requestData, { depth: 5, compact: false });
     
     const message = [
       this._HEADER,
