@@ -1,6 +1,6 @@
 {
   "name": "@juki-team/base-back",
-  "version": "0.0.73",
+  "version": "0.0.74",
   "license": "MIT",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -14,7 +14,8 @@
     "pull": "yarn add @juki-team/commons",
     "rollup:build": "rollup -c",
     "build": "rm -rf dist && yarn rollup:build",
-    "push": "yarn build && yarn publish --patch && git add . && node -p \"require('./package.json').version\" | git commit -F - ; git push origin main && node -p \"require('./package.json').version\""
+    "git-push": "f() { message=${1}; echo $message; git add .; echo $message | git commit -F -; yarn publish --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f",
+    "push": "f() { yarn build; yarn git-push \"${1}\"; }; f"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
@@ -29,7 +30,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@juki-team/commons": "^0.0.251",
+    "@juki-team/commons": "^0.0.268",
     "aws-sdk": "^2.1220.0",
     "axios": "^0.26.1",
     "cookie-parser": "^1.4.6",
