@@ -14,7 +14,7 @@
     "pull": "yarn add @juki-team/commons",
     "rollup:build": "rollup -c",
     "build": "rm -rf dist && yarn rollup:build",
-    "git-push": "f() { message=${1}; echo ${message:-chore}; git add .; echo $message | git commit -F -; yarn publish --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f",
+    "git-push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn publish --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f",
     "push": "f() { yarn build; yarn git-push \"${1}\"; }; f"
   },
   "devDependencies": {
