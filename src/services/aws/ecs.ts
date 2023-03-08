@@ -1,33 +1,62 @@
-import { AWS } from './config';
+import {
+  DescribeTaskDefinitionCommand,
+  DescribeTaskDefinitionCommandOutput,
+  DescribeTasksCommand,
+  DescribeTasksCommandOutput,
+  ECSClient,
+  ListTaskDefinitionsCommand,
+  ListTaskDefinitionsCommandOutput,
+  ListTasksCommand,
+  RunTaskCommand,
+  RunTaskCommandOutput,
+  StopTaskCommand,
+  StopTaskCommandOutput,
+} from '@aws-sdk/client-ecs';
 
-export const awsEcs = new AWS.ECS();
+import { AWS_REGION } from './config';
+
+export const awsEcs = new ECSClient({ region: AWS_REGION });
 
 // TODO put on ENV
-const subnets = ['subnet-4231374c', 'subnet-d08fc68f', 'subnet-611b072c', 'subnet-8bf5beaa', 'subnet-c14bdbf0', 'subnet-14327e72'];
+const subnets = [
+  'subnet-4231374c',
+  'subnet-d08fc68f',
+  'subnet-611b072c',
+  'subnet-8bf5beaa',
+  'subnet-c14bdbf0',
+  'subnet-14327e72',
+];
 const securityGroups = ['sg-020d888fae3cf28f6'];
 
 export function ecs() {
   return {
-    describeTaskDefinition: async ({ taskDefinition }: { taskDefinition: string }) => (
-      await awsEcs.describeTaskDefinition({ taskDefinition }).promise()
-    ),
-    listTaskDefinitions: async () => await awsEcs.listTaskDefinitions({}).promise(),
+    describeTaskDefinition: async ({ taskDefinition }: { taskDefinition: string }): Promise<DescribeTaskDefinitionCommandOutput> => {
+      const command = new DescribeTaskDefinitionCommand({ taskDefinition });
+      return await awsEcs.send(command);
+    },
+    listTaskDefinitions: async (): Promise<ListTaskDefinitionsCommandOutput> => {
+      const command = new ListTaskDefinitionsCommand({});
+      return await awsEcs.send(command);
+    },
   };
 }
 
 export function ecsCluster(cluster: string) {
   return {
-    listTasks: async () => (
-      await awsEcs.listTasks({ cluster }).promise()
-    ),
-    describeTasks: async ({ tasks }: { tasks: AWS.ECS.StringList }) => (
-      await awsEcs.describeTasks({ cluster, tasks }).promise()
-    ),
-    stopTask: async ({ task }: { task: string }) => (
-      await awsEcs.stopTask({ cluster, task }).promise()
-    ),
-    runTask: async ({ taskDefinition }: { taskDefinition: string }) => (
-      await awsEcs.runTask({
+    listTasks: async () => {
+      const command = new ListTasksCommand({ cluster });
+      return await awsEcs.send(command);
+    },
+    describeTasks: async ({ tasks }: { tasks: string[] }): Promise<DescribeTasksCommandOutput> => {
+      const command = new DescribeTasksCommand({ cluster, tasks });
+      return await awsEcs.send(command);
+    },
+    stopTask: async ({ task }: { task: string }): Promise<StopTaskCommandOutput> => {
+      const command = new StopTaskCommand({ cluster, task });
+      return await awsEcs.send(command);
+    },
+    runTask: async ({ taskDefinition }: { taskDefinition: string }): Promise<RunTaskCommandOutput> => {
+      const command = new RunTaskCommand({
         launchType: 'FARGATE',
         cluster,
         count: 1,
@@ -39,7 +68,8 @@ export function ecsCluster(cluster: string) {
             securityGroups,
           },
         },
-      }).promise()
-    ),
+      });
+      return await awsEcs.send(command);
+    },
   };
 }

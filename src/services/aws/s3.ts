@@ -1,12 +1,22 @@
+import {
+  _Object,
+  DeleteObjectCommand,
+  DeleteObjectCommandOutput,
+  GetObjectCommand,
+  ListObjectsCommand,
+  ListObjectsCommandInput,
+  ListObjectsCommandOutput,
+  PutObjectCommand,
+  PutObjectCommandOutput,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { ErrorCode, JkError } from '@juki-team/commons';
-import { DeleteObjectOutput } from 'aws-sdk/clients/s3';
 import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
 import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub } from '../../types';
-import { AWS } from './config';
 
-export const awsS3 = new AWS.S3({});
+export const awsS3 = new S3Client({});
 
 export function s3Bucket(bucket: string) {
   return {
@@ -17,9 +27,13 @@ export function s3Bucket(bucket: string) {
       folder,
       nameDataHashed = false,
       name: _name,
-    }: { body: any, contentType: string, extension?: string, folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate, nameDataHashed?: boolean, name?: string }) => {
-      const extension = _extension || mime.extension(contentType);
-      const name = nameDataHashed ? crypto.createHash('sha256').update(body, 'utf-8').digest('hex') : (_name ? _name : uuidv4());
+    }: { body: any, contentType: string, extension?: string, folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate, nameDataHashed?: boolean, name?: string }): Promise<PutObjectCommandOutput & {
+      bucket: string, folder: string, name: string, extension: string, key: string
+    }> => {
+      const extension = _extension || mime.extension(contentType) || '.bin';
+      const name = nameDataHashed ? crypto.createHash('sha256')
+        .update(body, 'utf-8')
+        .digest('hex') : (_name ? _name : uuidv4());
       const key = `${folder}/${name}.${extension}`;
       
       const params = {
@@ -28,52 +42,49 @@ export function s3Bucket(bucket: string) {
         Body: body,
         ContentType: contentType,
       };
-      return { ...await awsS3.putObject(params).promise(), bucket, folder, name, extension, key };
+      const command = new PutObjectCommand(params);
+      return { ...await awsS3.send(command), bucket, folder, name, extension, key };
     },
-    getObject: ({ key }: { key: string }) => {
+    getObject: ({ key }: { key: string }): Promise<string> => {
       return new Promise<string>((resolve, reject) => {
-        awsS3.getObject({ Bucket: bucket, Key: key }, async function (err, data) {
+        const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+        return awsS3.send(command, async function (err, data) {
           if (err) {
             reject(err);
           } else {
-            if (data.Body) {
+            if (data?.Body) {
               resolve(data.Body?.toString());
             } else {
-              reject(new JkError(ErrorCode.ERR500, { message: 'body is not valid' + data.toString() }));
+              reject(new JkError(ErrorCode.ERR500, { message: 'body is not valid' + data?.toString() }));
             }
           }
         });
       });
     },
-    deleteObject: ({ key }: { key: string }) => {
-      return new Promise<DeleteObjectOutput>((resolve, reject) => {
-        awsS3.deleteObject({ Bucket: bucket, Key: key }, async function (err, data) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
-      });
+    deleteObject: ({ key }: { key: string }): Promise<DeleteObjectCommandOutput> => {
+      const command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
+      return awsS3.send(command);
     },
-    listObjects: ({ prefix }: { prefix: string }) => {
+    listObjects: ({ prefix }: { prefix: string }): Promise<ListObjectsCommandOutput> => {
       const bucketParams = {
         Bucket: bucket,
         Prefix: prefix,
         MaxKeys: 10000,
       };
-      return awsS3.listObjects(bucketParams).promise();
+      const command = new ListObjectsCommand(bucketParams);
+      return awsS3.send(command);
     },
-    listAllObjects: async ({ prefix }: { prefix: string }) => {
+    listAllObjects: async ({ prefix }: { prefix: string }): Promise<_Object[]> => {
       let isTruncated = true;
       let marker;
-      const elements: AWS.S3.Object[] = [];
+      const elements: _Object[] = [];
       while (isTruncated) {
-        let params: AWS.S3.Types.ListObjectsRequest = { Bucket: bucket };
+        const params: ListObjectsCommandInput = { Bucket: bucket };
         if (prefix) params.Prefix = prefix;
         if (marker) params.Marker = marker;
         try {
-          const response = await awsS3.listObjects(params).promise();
+          const command = new ListObjectsCommand(params);
+          const response = await awsS3.send(command);
           response.Contents?.forEach(item => elements.push(item));
           isTruncated = !!response.IsTruncated;
           if (isTruncated) {

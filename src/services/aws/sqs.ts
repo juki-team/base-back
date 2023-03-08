@@ -1,18 +1,34 @@
-import { AWS } from './config';
+import {
+  ChangeMessageVisibilityCommand,
+  ChangeMessageVisibilityCommandOutput,
+  DeleteMessageCommand,
+  DeleteMessageCommandOutput,
+  GetQueueAttributesCommand,
+  GetQueueAttributesCommandOutput,
+  ReceiveMessageCommand,
+  ReceiveMessageCommandOutput,
+  ReceiveMessageRequest,
+  ReceiveMessageResult,
+  SendMessageCommand,
+  SendMessageCommandOutput,
+  SQSClient,
+} from '@aws-sdk/client-sqs';
+import { AWS_REGION } from './config';
 
-export const awsSqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+export const awsSqs = new SQSClient({ region: AWS_REGION, apiVersion: '2012-11-05' });
 
 export function sqsQueue(queueUrl: string) {
   return {
-    deleteMessage: async ({ receiveMessageResult }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult }) => {
-      return await awsSqs.deleteMessage({
+    deleteMessage: async ({ receiveMessageResult }: { receiveMessageResult: ReceiveMessageResult }): Promise<DeleteMessageCommandOutput> => {
+      const command = new DeleteMessageCommand({
         QueueUrl: queueUrl,
         ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
-      }).promise();
+      });
+      return await awsSqs.send(command);
     },
-    receiveMessage: async (props?: { visibilityTimeout: number, waitTimeSeconds: number }) => {
+    receiveMessage: async (props?: { visibilityTimeout: number, waitTimeSeconds: number }): Promise<ReceiveMessageCommandOutput> => {
       const { visibilityTimeout = 900, waitTimeSeconds = 20 } = props || {};
-      const params: AWS.SQS.Types.ReceiveMessageRequest = {
+      const params: ReceiveMessageRequest = {
         QueueUrl: queueUrl,
         AttributeNames: [
           'SentTimestamp',
@@ -24,14 +40,15 @@ export function sqsQueue(queueUrl: string) {
         VisibilityTimeout: visibilityTimeout, // Should be between 0 seconds and 12 hours.
         WaitTimeSeconds: waitTimeSeconds, // Should be between 0 and 20 seconds.
       };
-      return await awsSqs.receiveMessage(params).promise();
+      const command = new ReceiveMessageCommand(params);
+      return await awsSqs.send(command);
     },
     sendMessage: async ({
       messageBody,
       messageDeduplicationId,
       messageGroupId,
-    }: { messageBody: string, messageDeduplicationId: string, messageGroupId: string }) => {
-      return await awsSqs.sendMessage({
+    }: { messageBody: string, messageDeduplicationId: string, messageGroupId: string }): Promise<SendMessageCommandOutput> => {
+      const command = new SendMessageCommand({
         // Remove DelaySeconds parameter and value for FIFO queues
         // DelaySeconds: 10,
         MessageAttributes: {
@@ -44,20 +61,23 @@ export function sqsQueue(queueUrl: string) {
         MessageBody: messageBody,
         MessageDeduplicationId: messageDeduplicationId,
         MessageGroupId: messageGroupId,
-      }).promise();
+      });
+      return await awsSqs.send(command);
     },
     changeMessageVisibility: async ({
       receiveMessageResult,
       visibilityTimeout,
-    }: { receiveMessageResult: AWS.SQS.Types.ReceiveMessageResult, visibilityTimeout: number }) => (
-      await awsSqs.changeMessageVisibility({
+    }: { receiveMessageResult: ReceiveMessageResult, visibilityTimeout: number }): Promise<ChangeMessageVisibilityCommandOutput> => {
+      const command = new ChangeMessageVisibilityCommand({
         QueueUrl: queueUrl,
         ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
         VisibilityTimeout: visibilityTimeout,
-      })
-    ),
-    getQueueAttributes: async () => {
-      return await awsSqs.getQueueAttributes({ QueueUrl: queueUrl, AttributeNames: ['All'] }).promise();
+      });
+      return await awsSqs.send(command);
+    },
+    getQueueAttributes: async (): Promise<GetQueueAttributesCommandOutput> => {
+      const command = new GetQueueAttributesCommand({ QueueUrl: queueUrl, AttributeNames: ['All'] });
+      return await awsSqs.send(command);
     },
   };
 }
