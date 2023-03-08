@@ -10,7 +10,6 @@ import {
   PutObjectCommandOutput,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { ErrorCode, JkError } from '@juki-team/commons';
 import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,21 +47,13 @@ export function s3Bucket(bucket: string) {
       const command = new PutObjectCommand(params);
       return { ...await awsS3.send(command), bucket, folder, name, extension, key };
     },
-    getObject: ({ key }: { key: string }): Promise<string> => {
-      return new Promise<string>((resolve, reject) => {
-        const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-        return awsS3.send(command, async function (err, data) {
-          if (err) {
-            reject(err);
-          } else {
-            if (data?.Body) {
-              resolve(data.Body?.toString());
-            } else {
-              reject(new JkError(ErrorCode.ERR500, { message: 'body is not valid' + data?.toString() }));
-            }
-          }
-        });
-      });
+    getObject: async ({ key }: { key: string }): Promise<string> => {
+      const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+      const data = await awsS3.send(command);
+      if (data?.Body) {
+        return data.Body?.toString();
+      }
+      return '';
     },
     deleteObject: ({ key }: { key: string }): Promise<DeleteObjectCommandOutput> => {
       const command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
