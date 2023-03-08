@@ -51,7 +51,7 @@ export function s3Bucket(bucket: string) {
       const command = new GetObjectCommand({ Bucket: bucket, Key: key });
       const data = await awsS3.send(command);
       if (data?.Body) {
-        return data.Body?.toString();
+        return data.Body?.transformToString();
       }
       return '';
     },
