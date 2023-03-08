@@ -4,7 +4,7 @@ export const readFile = (fileName: string) => fs.promises.readFile(fileName, 'ut
 
 export const writeFile = (fileName: string, data: string) => fs.promises.writeFile(fileName, data);
 
-export const getFiles = (dir: string, recursive: true, files__?: string[]) => {
+export const getFiles = (dir: string, recursive: boolean, files__?: string[]) => {
   const files_: string[] = files__ || [];
   const files = fs.readdirSync(dir);
   for (const i in files) {
