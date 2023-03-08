@@ -13,9 +13,12 @@ import {
   StopTaskCommandOutput,
 } from '@aws-sdk/client-ecs';
 
-import { AWS_REGION } from './config';
+import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY } from './config';
 
-export const awsEcs = new ECSClient({ region: AWS_REGION });
+export const awsEcs = new ECSClient({
+  region: AWS_REGION,
+  credentials: { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
+});
 
 // TODO put on ENV
 const subnets = [

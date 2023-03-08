@@ -13,9 +13,13 @@ import {
   SendMessageCommandOutput,
   SQSClient,
 } from '@aws-sdk/client-sqs';
-import { AWS_REGION } from './config';
+import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY } from './config';
 
-export const awsSqs = new SQSClient({ region: AWS_REGION, apiVersion: '2012-11-05' });
+export const awsSqs = new SQSClient({
+  region: AWS_REGION,
+  apiVersion: '2012-11-05',
+  credentials: { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
+});
 
 export function sqsQueue(queueUrl: string) {
   return {
