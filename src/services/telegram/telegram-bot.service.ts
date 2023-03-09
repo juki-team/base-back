@@ -1,4 +1,4 @@
-import { chunkString } from '@juki-team/commons';
+import { chunkString, LogLevel } from '@juki-team/commons';
 import { AxiosResponse } from 'axios';
 import * as util from 'node:util';
 import { logError, logInfo, logMessage } from '../../helpers';
@@ -56,15 +56,18 @@ export class TelegramBotService {
   
   sendMessage(markdownV2Text: string, chatId: string) {
     if (!this._JUKI_LOGS_BOT_TOKEN || !this._JUKI_ERROR_LOGS_CHAT_ID || !this._JUKI_LOGS_BOT_TOKEN || !this._HEADER) {
-      return logMessage('PLEASE SET UP THE \'TelegramBotService\'');
+      return logMessage(LogLevel.ERROR)('PLEASE SET UP THE \'TelegramBotService\'');
     }
-    logMessage('Sending Telegram log...');
+    
+    logMessage(LogLevel.DEBUG)('Sending Telegram log...');
+    
     const url = `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
       `sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`;
     return this._fetcher(url)
       .then(response => {
         if (response.data.ok) {
-          return logMessage('Telegram message sent ' + url);
+          logMessage(LogLevel.DEBUG)('Telegram message sent ' + url);
+          return;
         }
         throw response;
       })
@@ -72,7 +75,7 @@ export class TelegramBotService {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          logError(
+          logError(LogLevel.WARN)(
             {
               data: error.response.data,
               status: error.response.status,
@@ -87,16 +90,16 @@ export class TelegramBotService {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          logError({ request: error.request, chatId, markdownV2Text }, 'Error on sending telegram message');
+          logError(LogLevel.WARN)({ request: error.request, chatId, markdownV2Text }, 'Error on sending telegram message');
         } else {
           // Something happened in setting up the request that triggered an Error
-          logError({ message: error.message, chatId, markdownV2Text }, 'Error on sending telegram message');
+          logError(LogLevel.WARN)({ message: error.message, chatId, markdownV2Text }, 'Error on sending telegram message');
         }
       });
   }
   
   async sendErrorMessage(title: string, error: any, requestData?: any) {
-    logError(error, title);
+    logError(LogLevel.ERROR)(error, title);
     const errorText = util.inspect(error, { depth: 5, compact: false });
     const requestText = util.inspect(requestData, { depth: 5, compact: false });
     const errorTextChunked = chunkString(errorText, this.maxSizeText);
@@ -124,7 +127,7 @@ export class TelegramBotService {
   }
   
   async sendInfoMessage(title: string, content: any) {
-    logInfo(content, title);
+    logInfo(LogLevel.DEBUG)(content, title);
     const contentText = util.inspect(content, { depth: 5, compact: false });
     const contentTextChunked = chunkString(contentText, this.maxSizeText);
     const messages = contentTextChunked.map(contentText => (

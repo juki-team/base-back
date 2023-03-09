@@ -1,4 +1,4 @@
-import { HTTPMethod } from '@juki-team/commons';
+import { HTTPMethod, LogLevel } from '@juki-team/commons';
 import axios from 'axios';
 import { IncomingMessage } from 'http';
 import https from 'https';
@@ -24,10 +24,10 @@ export const fetcherHttps_deprecated = ({
       },
       timeout: 900000,
     };
-    logInfo({ options, postData }, 'fetcherHttps POST');
+    logInfo(LogLevel.TRACE)({ options, postData }, 'fetcherHttps POST');
     const req = https.request(options, (response) => {
-      logMessage('statusCode: ' + response.statusCode);
-      logMessage('headers:' + response.headers);
+      logMessage(LogLevel.TRACE)('statusCode: ' + response.statusCode);
+      logMessage(LogLevel.TRACE)('headers:' + response.headers);
       response.on('data', (d) => process.stdout.write(d));
       const data: Uint8Array[] = [];
       response.on('data', (chunk) => data.push(chunk));
@@ -39,8 +39,8 @@ export const fetcherHttps_deprecated = ({
   } else if (method === HTTPMethod.GET) {
     const url = uri || hostname + path;
     https.get(url, (response: IncomingMessage) => {
-      logMessage('statusCode: ' + response.statusCode);
-      logMessage('headers:' + response.headers);
+      logMessage(LogLevel.TRACE)('statusCode: ' + response.statusCode);
+      logMessage(LogLevel.TRACE)('headers:' + response.headers);
       const data: Uint8Array[] = [];
       response.on('data', chunk => data.push(chunk));
       response.on('end', () => resolve(Buffer.concat(data).toString()));
@@ -55,10 +55,10 @@ export const fetcherAxios = async ({
   config,
 }: { method?: string, url: string, body?: Object, config?: { timeout: number } }) => {
   if (method === 'POST') {
-    // logInfo({ url, method, body }, 'fetcherAxios POST');
+    logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherAxios POST');
     return await axios.post(url, body, config);
   } else if (method === 'GET') {
-    // logInfo({ url, method }, 'fetcherAxios GET');
+    logInfo(LogLevel.TRACE)({ url, method }, 'fetcherAxios GET');
     return await axios.get(url, config);
   }
 };

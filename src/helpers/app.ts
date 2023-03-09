@@ -2,7 +2,7 @@ import { LogLevel } from '@juki-team/commons';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express } from 'express';
-import { LOG_LEVEL, NODE_ENV, ORIGINS, PORT, VERSION } from '../config';
+import { NODE_ENV, ORIGINS, PORT, VERSION } from '../config';
 import {
   errorLoggerHandler,
   errorResponderHandler,
@@ -11,7 +11,7 @@ import {
   loggerRequestTimeHandler,
   responsesMiddleware,
 } from '../middlewares';
-import { logMessage } from './log';
+import { logMessage, shouldDisplayLog } from './log';
 import { ResponseContent, ResponseContents, ResponseError } from './responses';
 
 declare global {
@@ -25,18 +25,19 @@ declare global {
 }
 
 export const initialSetupApp = () => {
-  logMessage(`NODE_ENV [${NODE_ENV}]`);
-  logMessage(`VERSION [${VERSION}]`);
-  logMessage(`PORT [${PORT}]`);
-  logMessage(`ORIGINS [${ORIGINS.join(',')}]`);
+  
+  logMessage(LogLevel.INFO)(`NODE_ENV [${NODE_ENV}]`);
+  logMessage(LogLevel.INFO)(`VERSION [${VERSION}]`);
+  logMessage(LogLevel.INFO)(`PORT [${PORT}]`);
+  logMessage(LogLevel.INFO)(`ORIGINS [${ORIGINS.join(',')}]`);
   
   const app = express();
   app.disable('x-powered-by');
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  if (LOG_LEVEL === LogLevel.TRACE || LOG_LEVEL === LogLevel.DEBUG) {
+  if (shouldDisplayLog(LogLevel.DEBUG)) {
     app.use(loggerAllRequestHandler);
-  } else if (LOG_LEVEL === LogLevel.INFO) {
+  } else if (shouldDisplayLog(LogLevel.INFO)) {
     app.use(loggerRequestTimeHandler);
   }
   
@@ -52,5 +53,5 @@ export const finishSetupApp = (app: Express) => {
   app.use(errorResponderHandler);
   app.use(failSafeHandler);
   
-  return app.listen(PORT, () => logMessage(`Listening on port ${PORT}`));
+  return app.listen(PORT, () => logMessage(LogLevel.INFO)(`Listening on port ${PORT}`));
 };
