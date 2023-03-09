@@ -5,6 +5,8 @@ import {
   DeleteMessageCommandOutput,
   GetQueueAttributesCommand,
   GetQueueAttributesCommandOutput,
+  PurgeQueueCommand,
+  PurgeQueueCommandOutput,
   ReceiveMessageCommand,
   ReceiveMessageCommandOutput,
   ReceiveMessageRequest,
@@ -81,6 +83,10 @@ export function sqsQueue(queueUrl: string) {
     },
     getQueueAttributes: async (): Promise<GetQueueAttributesCommandOutput> => {
       const command = new GetQueueAttributesCommand({ QueueUrl: queueUrl, AttributeNames: ['All'] });
+      return await awsSqs.send(command);
+    },
+    purgeQueue: async (): Promise<PurgeQueueCommandOutput> => {
+      const command = new PurgeQueueCommand({ QueueUrl: queueUrl });
       return await awsSqs.send(command);
     },
   };
