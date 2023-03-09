@@ -23,7 +23,7 @@ export function errorLoggerHandler(err: any, request: Request, response: Respons
     params,
     error: err.stack,
   };
-  jkLogTelegramBot.sendErrorMessage(`Logging error [[${url}]]`, error, getRequestData(request));
+  void jkLogTelegramBot.sendErrorMessage(`Logging error [[${url}]]`, error, getRequestData(request));
   next(err);
 }
 

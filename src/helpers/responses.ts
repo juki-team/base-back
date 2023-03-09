@@ -1,4 +1,12 @@
-import { contentResponse, ContentsMetaType, contentsResponse, ERROR, ErrorCode, errorsResponse, JkError } from '@juki-team/commons';
+import {
+  contentResponse,
+  ContentsMetaType,
+  contentsResponse,
+  ERROR,
+  ErrorCode,
+  errorsResponse,
+  JkError,
+} from '@juki-team/commons';
 import { Request, Response } from 'express';
 import { jkLogTelegramBot } from '../services';
 import { ResponseOptionsType } from '../types';
@@ -34,7 +42,7 @@ export const responseError = (request: Request, response: Response) => (error: J
   const status = _status || ERROR[error.code].status;
   
   if (notify) {
-    jkLogTelegramBot.sendErrorMessage(`${status}: ${message}`, errors, getRequestData(request));
+    void jkLogTelegramBot.sendErrorMessage(`${status}: ${message}`, errors, getRequestData(request));
   }
   
   if (!response.headersSent) {
@@ -51,7 +59,7 @@ export const responseContents = (request: Request, response: Response) => <T, >(
   const status = _status || 200;
   
   if (notify) {
-    jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { contents, meta, request: getRequestData(request) });
+    void jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { contents, meta, request: getRequestData(request) });
   }
   
   return response.status(status).send(contentsResponse(message, contents, meta));
@@ -65,7 +73,7 @@ export const responseContent = (request: Request, response: Response) => <T, >(c
   const status = _status || 200;
   
   if (notify) {
-    jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { content, request: getRequestData(request) });
+    void jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { content, request: getRequestData(request) });
   }
   return response.status(status).send(contentResponse(message, content));
 };
