@@ -135,7 +135,7 @@ export class TelegramBotService {
           contentText += '\n';
         }
         contentText += `*${this.escape(key + ':')}* ` +
-          `${this.escape(Array.isArray(value) ? value.map(v => '```' + v + '```').join(',') : ('```' + value + '```'))}`;
+          `${(Array.isArray(value) ? value : [value]).map(v => '```' + this.escape(v + '') + '```').join(',')}`;
       });
     }
     const contentTextChunked = chunkString(contentText, this.maxSizeText);
