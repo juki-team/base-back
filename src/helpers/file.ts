@@ -12,6 +12,7 @@ export const getFiles = (dir: string, recursive: boolean, files__?: string[]) =>
   try {
     files = fs.readdirSync(dir);
   } catch (error) {
+    files = [];
     logError(LogLevel.TRACE)(error, 'Error on fs.readdirSync(dir)');
   }
   for (const i in files) {
@@ -20,8 +21,8 @@ export const getFiles = (dir: string, recursive: boolean, files__?: string[]) =>
     try {
       validDir = recursive && fs.statSync(name).isDirectory();
     } catch (error) {
-      logError(LogLevel.TRACE)(error, 'Error on fs.statSync(name).isDirectory()');
       validDir = false;
+      logError(LogLevel.TRACE)(error, 'Error on fs.statSync(name).isDirectory()');
     }
     if (validDir) {
       getFiles(name, true, files_);
