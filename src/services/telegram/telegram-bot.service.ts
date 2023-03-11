@@ -106,8 +106,7 @@ export class TelegramBotService {
     
     const messages = errorTextChunked.map(errorText => (
       [
-        '**' + this._HEADER + '**',
-        '*' + this.escape(title) + '*',
+        `_${this.escape(this._HEADER + ':')}_ *${this.escape(title)}*`,
         '```',
         this.escape(errorText),
         '```',
@@ -120,8 +119,11 @@ export class TelegramBotService {
     
     const results = [];
     for (let i = 0; i < messages.length; i++) {
-      results.push(await this.sendMessage(messages[i] + this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`), this._JUKI_ERROR_LOGS_CHAT_ID));
+      results.push(await this.sendMessage(
+        messages[i] + (messages.length > 1 ? this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
+        , this._JUKI_ERROR_LOGS_CHAT_ID));
     }
+    
     return results;
   }
   
@@ -131,20 +133,16 @@ export class TelegramBotService {
     if (text) {
       contentText = '';
       Object.entries(content).forEach(([key, value]) => {
-        if (contentText) {
-          contentText += '\n';
-        }
-        contentText += `*${this.escape(key + ':')}* ` +
+        contentText += `\n*${this.escape(key + ':')}* ` +
           `${(Array.isArray(value) ? value : [value]).map(v => '`' + this.escape(v + '') + '`').join(', ')}`;
       });
     }
     const contentTextChunked = chunkString(contentText, this.maxSizeText);
     const messages = contentTextChunked.map(contentText => (
       [
-        '**' + this._HEADER + '**',
-        '*' + this.escape(title) + '*',
+        `_${this.escape(this._HEADER + ':')}_ *${this.escape(title)}*`,
         ...(text ? [contentText] : [
-          '```',
+          '\n```',
           this.escape(contentText),
           '```',
         ]),
@@ -153,7 +151,9 @@ export class TelegramBotService {
     
     const results = [];
     for (let i = 0; i < messages.length; i++) {
-      results.push(await this.sendMessage(messages[i] + this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`), this._JUKI_INFO_LOGS_CHAT_ID));
+      results.push(await this.sendMessage(
+        messages[i] + (messages.length > 1 ? this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
+        , this._JUKI_INFO_LOGS_CHAT_ID));
     }
     
     return results;
