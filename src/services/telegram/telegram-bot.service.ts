@@ -106,8 +106,8 @@ export class TelegramBotService {
     
     const messages = errorTextChunked.map(errorText => (
       [
-        this._HEADER,
-        this.escape(title),
+        '**' + this._HEADER + '**',
+        '*' + this.escape(title) + '*',
         '```',
         this.escape(errorText),
         '```',
@@ -135,14 +135,14 @@ export class TelegramBotService {
           contentText += '\n';
         }
         contentText += `*${this.escape(key + ':')}* ` +
-          `${(Array.isArray(value) ? value : [value]).map(v => '```' + this.escape(v + '') + '```').join(',')}`;
+          `${(Array.isArray(value) ? value : [value]).map(v => '`' + this.escape(v + '') + '`').join(', ')}`;
       });
     }
     const contentTextChunked = chunkString(contentText, this.maxSizeText);
     const messages = contentTextChunked.map(contentText => (
       [
-        this._HEADER,
-        this.escape(title),
+        '**' + this._HEADER + '**',
+        '*' + this.escape(title) + '*',
         ...(text ? [contentText] : [
           '```',
           this.escape(contentText),
