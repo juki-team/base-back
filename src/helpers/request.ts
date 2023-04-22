@@ -71,4 +71,5 @@ export const fetcherAxios = async ({
     logInfo(LogLevel.TRACE)({ url, method }, 'fetcherAxios GET');
     return await axios.get(url, config);
   }
+  return await axios.get(url, config);
 };

@@ -4,7 +4,8 @@ import * as util from 'node:util';
 import { logError, logInfo, logMessage } from '../../helpers';
 
 type fetcherOptionsType = { body?: Object | FormData, method?: 'POST' | 'GET' };
-type fetcherType = (url: string, options?: fetcherOptionsType) => Promise<AxiosResponse>
+
+export type fetcherType = (url: string, options?: fetcherOptionsType) => Promise<AxiosResponse>
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN: string = '';

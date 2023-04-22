@@ -4,10 +4,10 @@ import {
   TELEGRAM_JUKI_LOGS_BOT_TOKEN,
 } from '../../config';
 import { fetcherAxios } from '../../helpers/request';
-import { TelegramBotService } from './telegram-bot.service';
+import { fetcherType, TelegramBotService } from './telegram-bot.service';
 
-const getFetcher = (url: string, { body, method }: { body: Object | FormData, method: 'POST' | 'GET' }) => fetcherAxios(
-  { url, body, method });
+const getFetcher: fetcherType = (url: string, options) => fetcherAxios(
+  { url, body: options?.body, method: options?.method });
 
 export const jkLogTelegramBot = new TelegramBotService(getFetcher);
 
