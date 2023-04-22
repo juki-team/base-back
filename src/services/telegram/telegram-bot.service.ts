@@ -25,6 +25,7 @@ export class TelegramBotService {
     this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     this._JUKI_INFO_LOGS_CHAT_ID = jukiInfoLogsChatId;
     this._JUKI_ERROR_LOGS_CHAT_ID = jukiErrorLogsChatId;
+    console.log({ _JUKI_LOGS_BOT_TOKEN: this._JUKI_LOGS_BOT_TOKEN });
     this._JUKI_BOT = new TelegramBot(this._JUKI_LOGS_BOT_TOKEN, { polling: true });
     if (fetcher) {
       this._fetcher = fetcher;
@@ -59,7 +60,7 @@ export class TelegramBotService {
   }
   
   sendErrorFile(file: any) {
-    this._JUKI_BOT.sendDocument(this._JUKI_ERROR_LOGS_CHAT_ID, file);
+    return this._JUKI_BOT.sendDocument(this._JUKI_ERROR_LOGS_CHAT_ID, file);
   }
   
   sendMessage(markdownV2Text: string, chatId: string) {
