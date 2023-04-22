@@ -85,6 +85,7 @@ export class TelegramBotService {
               status: error.response.status,
               headers: error.response.headers,
               partialUrl,
+              url,
             },
             'Error on sending telegram message',
           );
@@ -94,13 +95,13 @@ export class TelegramBotService {
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
           logError(LogLevel.WARN)(
-            { request: error.request, partialUrl },
+            { request: error.request, partialUrl, url },
             'Error on sending telegram message',
           );
         } else {
           // Something happened in setting up the request that triggered an Error
           logError(LogLevel.WARN)(
-            { message: error.message, partialUrl },
+            { message: error.message, partialUrl, url },
             'Error on sending telegram message',
           );
         }
