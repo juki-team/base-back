@@ -1,32 +1,30 @@
 import { chunkString, LogLevel } from '@juki-team/commons';
 import { AxiosResponse } from 'axios';
 import * as util from 'node:util';
-// @ts-ignore
-import TelegramBot from 'telegram-bot-api';
 import { logError, logInfo, logMessage } from '../../helpers';
+
+type fetcherOptionsType = { body?: Object | FormData, method?: 'POST' | 'GET' };
+type fetcherType = (url: string, options?: fetcherOptionsType) => Promise<AxiosResponse>
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN: string = '';
   _JUKI_INFO_LOGS_CHAT_ID: string = '';
   _JUKI_ERROR_LOGS_CHAT_ID: string = '';
-  _JUKI_BOT: TelegramBot = null;
   _HEADER?: string;
-  _fetcher: (url: string, options?: any) => Promise<AxiosResponse>;
+  _fetcher: fetcherType;
   readonly maxSizeText = 1200;
   
-  constructor(fetcher: (url: string, options?: any) => Promise<any>) {
+  constructor(fetcher: fetcherType) {
     // this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     // this._JUKI_LOGS_CHAT_ID = jukiLogsChatId;
     // this._HEADER = header;
     this._fetcher = fetcher;
   }
   
-  config(jukiLogsBotToken: string, jukiInfoLogsChatId: string, jukiErrorLogsChatId: string, fetcher?: (url: string, options?: any) => Promise<any>) {
+  config(jukiLogsBotToken: string, jukiInfoLogsChatId: string, jukiErrorLogsChatId: string, fetcher?: fetcherType) {
     this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     this._JUKI_INFO_LOGS_CHAT_ID = jukiInfoLogsChatId;
     this._JUKI_ERROR_LOGS_CHAT_ID = jukiErrorLogsChatId;
-    console.log({ _JUKI_LOGS_BOT_TOKEN: this._JUKI_LOGS_BOT_TOKEN });
-    this._JUKI_BOT = new TelegramBot({ token: this._JUKI_LOGS_BOT_TOKEN });
     if (fetcher) {
       this._fetcher = fetcher;
     }
@@ -59,63 +57,16 @@ export class TelegramBotService {
       .split('!').join('\\!');
   }
   
-  sendErrorDocument(document: any) {
-    return this._JUKI_BOT.sendDocument({
-      chat_id: this._JUKI_ERROR_LOGS_CHAT_ID,
-      document,
-    })
-      .then((response: any) => {
-        console.log('response', response);
-        // if (response.data.ok) {
-        //   logMessage(LogLevel.DEBUG)('Telegram message sent ' + url);
-        //   return;
-        // }
-        // throw response;
-      })
-      .catch((error: any) => {
-        console.log('error', error);
-        // if (error.response) {
-        //   // The request was made and the server responded with a status code
-        //   // that falls out of the range of 2xx
-        //   logError(LogLevel.WARN)(
-        //     {
-        //       data: error.response.data,
-        //       status: error.response.status,
-        //       headers: error.response.headers,
-        //       chatId,
-        //       markdownV2Text,
-        //     },
-        //     'Error on sending telegram message',
-        //   );
-        //
-        // } else if (error.request) {
-        //   // The request was made but no response was received
-        //   // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        //   // http.ClientRequest in node.js
-        //   logError(LogLevel.WARN)(
-        //     { request: error.request, chatId, markdownV2Text },
-        //     'Error on sending telegram message',
-        //   );
-        // } else {
-        //   // Something happened in setting up the request that triggered an Error
-        //   logError(LogLevel.WARN)(
-        //     { message: error.message, chatId, markdownV2Text },
-        //     'Error on sending telegram message',
-        //   );
-        // }
-      });
-  }
-  
-  sendMessage(markdownV2Text: string, chatId: string) {
+  send(partialUrl: string, formData?: FormData) {
     if (!this._JUKI_LOGS_BOT_TOKEN || !this._JUKI_ERROR_LOGS_CHAT_ID || !this._JUKI_LOGS_BOT_TOKEN || !this._HEADER) {
       return logMessage(LogLevel.ERROR)('PLEASE SET UP THE \'TelegramBotService\'');
     }
     
     logMessage(LogLevel.DEBUG)('Sending Telegram log...');
     
-    const url = `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/` +
-      `sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`;
-    return this._fetcher(url)
+    const url = `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/${partialUrl}`;
+    
+    return this._fetcher(url, formData ? { body: formData, method: 'POST' } : {})
       .then(response => {
         if (response.data.ok) {
           logMessage(LogLevel.DEBUG)('Telegram message sent ' + url);
@@ -132,8 +83,7 @@ export class TelegramBotService {
               data: error.response.data,
               status: error.response.status,
               headers: error.response.headers,
-              chatId,
-              markdownV2Text,
+              partialUrl,
             },
             'Error on sending telegram message',
           );
@@ -143,17 +93,33 @@ export class TelegramBotService {
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
           logError(LogLevel.WARN)(
-            { request: error.request, chatId, markdownV2Text },
+            { request: error.request, partialUrl },
             'Error on sending telegram message',
           );
         } else {
           // Something happened in setting up the request that triggered an Error
           logError(LogLevel.WARN)(
-            { message: error.message, chatId, markdownV2Text },
+            { message: error.message, partialUrl },
             'Error on sending telegram message',
           );
         }
       });
+  }
+  
+  sendErrorDocument(document: any) {
+    const formData = new FormData();
+    formData.append('chat_id', this._JUKI_ERROR_LOGS_CHAT_ID);
+    formData.append('document', document);
+    return this.send('sendDocument', formData);
+  }
+  
+  sendMessage(markdownV2Text: string, chatId: string) {
+    if (!this._JUKI_LOGS_BOT_TOKEN || !this._JUKI_ERROR_LOGS_CHAT_ID || !this._JUKI_LOGS_BOT_TOKEN || !this._HEADER) {
+      return logMessage(LogLevel.ERROR)('PLEASE SET UP THE \'TelegramBotService\'');
+    }
+    
+    logMessage(LogLevel.DEBUG)('Sending Telegram log...');
+    return this.send(`sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`);
   }
   
   async sendErrorMessage(title: string, error: any, requestData?: any) {

@@ -10,7 +10,13 @@ export const fetcherHttps_deprecated = ({
   method = HTTPMethod.GET,
   uri = '',
   body = {},
-}: { hostname?: string, path?: string, method?: HTTPMethod, uri?: string, body?: Object }) => new Promise((resolve, reject) => {
+}: {
+  hostname?: string,
+  path?: string,
+  method?: HTTPMethod,
+  uri?: string,
+  body?: Object
+}) => new Promise((resolve, reject) => {
   if (method === HTTPMethod.POST) {
     const postData = JSON.stringify(body);
     const options = {
@@ -56,7 +62,11 @@ export const fetcherAxios = async ({
 }: { method?: string, url: string, body?: Object, config?: { timeout: number } }) => {
   if (method === 'POST') {
     logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherAxios POST');
-    return await axios.post(url, body, config);
+    const headers: any = {};
+    if (body instanceof FormData) {
+      headers['Content-Type'] = 'multipart/form-data';
+    }
+    return await axios.post(url, body, { ...config, headers });
   } else if (method === 'GET') {
     logInfo(LogLevel.TRACE)({ url, method }, 'fetcherAxios GET');
     return await axios.get(url, config);
