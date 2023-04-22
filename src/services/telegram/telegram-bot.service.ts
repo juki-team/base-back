@@ -63,7 +63,47 @@ export class TelegramBotService {
     return this._JUKI_BOT.sendDocument({
       chat_id: this._JUKI_ERROR_LOGS_CHAT_ID,
       document,
-    });
+    })
+      .then((response: any) => {
+        console.log('response', response);
+        // if (response.data.ok) {
+        //   logMessage(LogLevel.DEBUG)('Telegram message sent ' + url);
+        //   return;
+        // }
+        // throw response;
+      })
+      .catch((error: any) => {
+        console.log('error', error);
+        // if (error.response) {
+        //   // The request was made and the server responded with a status code
+        //   // that falls out of the range of 2xx
+        //   logError(LogLevel.WARN)(
+        //     {
+        //       data: error.response.data,
+        //       status: error.response.status,
+        //       headers: error.response.headers,
+        //       chatId,
+        //       markdownV2Text,
+        //     },
+        //     'Error on sending telegram message',
+        //   );
+        //
+        // } else if (error.request) {
+        //   // The request was made but no response was received
+        //   // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        //   // http.ClientRequest in node.js
+        //   logError(LogLevel.WARN)(
+        //     { request: error.request, chatId, markdownV2Text },
+        //     'Error on sending telegram message',
+        //   );
+        // } else {
+        //   // Something happened in setting up the request that triggered an Error
+        //   logError(LogLevel.WARN)(
+        //     { message: error.message, chatId, markdownV2Text },
+        //     'Error on sending telegram message',
+        //   );
+        // }
+      });
   }
   
   sendMessage(markdownV2Text: string, chatId: string) {
