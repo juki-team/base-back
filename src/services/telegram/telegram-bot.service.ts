@@ -1,12 +1,15 @@
 import { chunkString, LogLevel } from '@juki-team/commons';
 import { AxiosResponse } from 'axios';
 import * as util from 'node:util';
+// @ts-ignore
+import TelegramBot from 'telegram-bot-api';
 import { logError, logInfo, logMessage } from '../../helpers';
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN: string = '';
   _JUKI_INFO_LOGS_CHAT_ID: string = '';
   _JUKI_ERROR_LOGS_CHAT_ID: string = '';
+  _JUKI_BOT: TelegramBot = null;
   _HEADER?: string;
   _fetcher: (url: string, options?: any) => Promise<AxiosResponse>;
   readonly maxSizeText = 1200;
@@ -22,6 +25,7 @@ export class TelegramBotService {
     this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
     this._JUKI_INFO_LOGS_CHAT_ID = jukiInfoLogsChatId;
     this._JUKI_ERROR_LOGS_CHAT_ID = jukiErrorLogsChatId;
+    this._JUKI_BOT = new TelegramBot(this._JUKI_LOGS_BOT_TOKEN, { polling: true });
     if (fetcher) {
       this._fetcher = fetcher;
     }
@@ -52,6 +56,10 @@ export class TelegramBotService {
       .split('}').join('\\}')
       .split('.').join('\\.')
       .split('!').join('\\!');
+  }
+  
+  sendErrorFile(file: any) {
+    this._JUKI_BOT.sendDocument(this._JUKI_ERROR_LOGS_CHAT_ID, file);
   }
   
   sendMessage(markdownV2Text: string, chatId: string) {
@@ -90,10 +98,16 @@ export class TelegramBotService {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          logError(LogLevel.WARN)({ request: error.request, chatId, markdownV2Text }, 'Error on sending telegram message');
+          logError(LogLevel.WARN)(
+            { request: error.request, chatId, markdownV2Text },
+            'Error on sending telegram message',
+          );
         } else {
           // Something happened in setting up the request that triggered an Error
-          logError(LogLevel.WARN)({ message: error.message, chatId, markdownV2Text }, 'Error on sending telegram message');
+          logError(LogLevel.WARN)(
+            { message: error.message, chatId, markdownV2Text },
+            'Error on sending telegram message',
+          );
         }
       });
   }
@@ -120,7 +134,8 @@ export class TelegramBotService {
     const results = [];
     for (let i = 0; i < messages.length; i++) {
       results.push(await this.sendMessage(
-        messages[i] + (messages.length > 1 ? this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
+        messages[i] + (messages.length > 1 ? this.escape(`\n${i
+        + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
         , this._JUKI_ERROR_LOGS_CHAT_ID));
     }
     
@@ -132,16 +147,16 @@ export class TelegramBotService {
     let contentText = util.inspect(content, { depth: 5, compact: false });
     if (text) {
       contentText = '';
-      Object.entries(content).forEach(([key, value]) => {
+      Object.entries(content).forEach(([ key, value ]) => {
         contentText += `\n*${this.escape(key + ':')}* ` +
-          `${(Array.isArray(value) ? value : [value]).map(v => '`' + this.escape(v + '') + '`').join(', ')}`;
+          `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(v + '') + '`').join(', ')}`;
       });
     }
     const contentTextChunked = chunkString(contentText, this.maxSizeText);
     const messages = contentTextChunked.map(contentText => (
       [
         `_${this.escape(this._HEADER + ':')}_\n*${this.escape(title)}*`,
-        ...(text ? [contentText] : [
+        ...(text ? [ contentText ] : [
           '\n```',
           this.escape(contentText),
           '```',
@@ -152,7 +167,8 @@ export class TelegramBotService {
     const results = [];
     for (let i = 0; i < messages.length; i++) {
       results.push(await this.sendMessage(
-        messages[i] + (messages.length > 1 ? this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
+        messages[i] + (messages.length > 1 ? this.escape(`\n${i
+        + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
         , this._JUKI_INFO_LOGS_CHAT_ID));
     }
     
