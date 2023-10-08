@@ -7,6 +7,7 @@ export const ORIGINS = [
   /^((https:\/\/juki\.app)|(https:\/\/[a-zA-Z0-9\-_]+\.juki\.app))$/,
   /^((https:\/\/juk\.app)|(https:\/\/[a-zA-Z0-9\-_]+\.juk\.app))$/,
   /^((https:\/\/juki\.team)|(https:\/\/[a-zA-Z0-9\-_]+\.juki\.team))$/,
+  /^((https:\/\/jukijudge\.com)|(https:\/\/[a-zA-Z0-9\-_]+\.jukijudge\.com))$/,
   /^((https:\/\/oscargauss\.com)|(https:\/\/[a-zA-Z0-9\-_]+\.oscargauss\.com))$/,
 ];
 export const LOG_LEVEL = process.env.LOG_LEVEL || LogLevel.INFO;
