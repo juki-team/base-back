@@ -13,6 +13,7 @@ export enum ImagesJukiPub {
   O = 'o', // image original
   T = 't', // image thumbnail
   U = 'u', // user images
+  C = 'c', // company images
 }
 
 export enum FilesJukiPub {
