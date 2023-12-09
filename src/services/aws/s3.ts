@@ -1,5 +1,6 @@
 import {
   _Object,
+  CopyObjectCommand,
   DeleteObjectCommand,
   DeleteObjectCommandOutput,
   GetObjectCommand,
@@ -23,13 +24,20 @@ export const awsS3 = new S3Client({
 export function s3Bucket(bucket: string) {
   return {
     putObject: async ({
-      body,
-      contentType,
-      extension: _extension,
-      folder,
-      nameDataHashed = false,
-      name: _name,
-    }: { body: any, contentType: string, extension?: string, folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate, nameDataHashed?: boolean, name?: string }): Promise<PutObjectCommandOutput & {
+                        body,
+                        contentType,
+                        extension: _extension,
+                        folder,
+                        nameDataHashed = false,
+                        name: _name,
+                      }: {
+      body: any,
+      contentType: string,
+      extension?: string,
+      folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate,
+      nameDataHashed?: boolean,
+      name?: string
+    }): Promise<PutObjectCommandOutput & {
       bucket: string, folder: string, name: string, extension: string, key: string
     }> => {
       const extension = _extension || mime.extension(contentType) || '.bin';
@@ -54,6 +62,13 @@ export function s3Bucket(bucket: string) {
         return data.Body?.transformToString();
       }
       return '';
+    },
+    copyObject: async ({ copySource, key }: { copySource: string, key: string }): Promise<PutObjectCommandOutput & {
+      bucket: string,
+    }> => {
+      const command = new CopyObjectCommand({ CopySource: `/${bucket}/${copySource}`, Bucket: bucket, Key: key });
+      const data = await awsS3.send(command);
+      return { ...data, bucket };
     },
     deleteObject: ({ key }: { key: string }): Promise<DeleteObjectCommandOutput> => {
       const command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
