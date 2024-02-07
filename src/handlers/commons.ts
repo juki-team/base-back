@@ -63,3 +63,16 @@ export function routerGetCatFilePath(request: Request<{ filePath: string }>, res
     });
   }
 }
+
+export function routerGetEnvs(request: Request<{ folderPath: string }>, response: JkResponse) {
+  try {
+    response.sendContent({
+      ...process.env,
+    });
+  } catch (error) {
+    response.sendError(toJkError(error), {
+      message: 'Error handling "routerGetLsFolderPath" /ls/' + request.params.folderPath,
+      notify: true,
+    });
+  }
+}
