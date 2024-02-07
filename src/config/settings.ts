@@ -20,3 +20,4 @@ export const TELEGRAM_JUKI_INFO_LOGS_CHAT_ID = process.env.TELEGRAM_JUKI_INFO_LO
 export const TELEGRAM_JUKI_ERROR_LOGS_CHAT_ID = process.env.TELEGRAM_JUKI_ERROR_LOGS_CHAT_ID || '';
 
 export const JUKI_SECRET_TOKEN = process.env.JUKI_SECRET_TOKEN || '';
+export const SHARED_TASK_STATUSES_FOLDER = process.env.SHARED_TASK_STATUSES_FOLDER || '';
