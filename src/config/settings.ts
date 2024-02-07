@@ -18,3 +18,5 @@ export const PORT = process.env.PORT || 4000;
 export const TELEGRAM_JUKI_LOGS_BOT_TOKEN = process.env.TELEGRAM_JUKI_LOGS_BOT_TOKEN || '';
 export const TELEGRAM_JUKI_INFO_LOGS_CHAT_ID = process.env.TELEGRAM_JUKI_INFO_LOGS_CHAT_ID || '';
 export const TELEGRAM_JUKI_ERROR_LOGS_CHAT_ID = process.env.TELEGRAM_JUKI_ERROR_LOGS_CHAT_ID || '';
+
+export const JUKI_SECRET_TOKEN = process.env.JUKI_SECRET_TOKEN || '';

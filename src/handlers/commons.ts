@@ -1,8 +1,8 @@
-import { toJkError } from '@juki-team/commons';
+import { ErrorCode, JkError, toJkError } from '@juki-team/commons';
 import { Request } from 'express';
 import fs from 'fs';
 import os from 'os';
-import { NODE_ENV, VERSION } from '../config';
+import { JUKI_SECRET_TOKEN, NODE_ENV, VERSION } from '../config';
 import { JkResponse } from '../types';
 
 export function routerGetPing(request: Request, response: JkResponse) {
@@ -44,6 +44,12 @@ export function routerGetStatus(request: Request, response: JkResponse) {
 
 export function routerGetLsFolderPath(request: Request<{ folderPath: string }>, response: JkResponse) {
   try {
+    if (request.query.secretToken !== JUKI_SECRET_TOKEN) {
+      return response.sendError(new JkError(ErrorCode.ERR401), {
+        message: 'Unauthorized "routerGetLsFolderPath" /ls/' + request.params.folderPath,
+        notify: true,
+      });
+    }
     response.sendContent(fs.readdirSync(request.params.folderPath));
   } catch (error) {
     response.sendError(toJkError(error), {
@@ -55,6 +61,12 @@ export function routerGetLsFolderPath(request: Request<{ folderPath: string }>, 
 
 export function routerGetCatFilePath(request: Request<{ filePath: string }>, response: JkResponse) {
   try {
+    if (request.query.secretToken !== JUKI_SECRET_TOKEN) {
+      return response.sendError(new JkError(ErrorCode.ERR401), {
+        message: 'Unauthorized "routerGetCatFilePath" /cat/' + request.params.filePath,
+        notify: true,
+      });
+    }
     response.sendContent(fs.readFileSync(request.params.filePath, 'utf8'));
   } catch (error) {
     response.sendError(toJkError(error), {
@@ -64,14 +76,20 @@ export function routerGetCatFilePath(request: Request<{ filePath: string }>, res
   }
 }
 
-export function routerGetEnvs(request: Request<{ folderPath: string }>, response: JkResponse) {
+export function routerGetEnvs(request: Request, response: JkResponse) {
   try {
+    if (request.query.secretToken !== JUKI_SECRET_TOKEN) {
+      return response.sendError(new JkError(ErrorCode.ERR401), {
+        message: 'Unauthorized "routerGetEnvs"',
+        notify: true,
+      });
+    }
     response.sendContent({
       ...process.env,
     });
   } catch (error) {
     response.sendError(toJkError(error), {
-      message: 'Error handling "routerGetLsFolderPath" /ls/' + request.params.folderPath,
+      message: 'Error handling "routerGetEnvs"',
       notify: true,
     });
   }
