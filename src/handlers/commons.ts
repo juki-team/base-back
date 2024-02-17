@@ -21,7 +21,7 @@ export function routerGetVersion(request: Request, response: JkResponse) {
   }
 }
 
-export function routerGetEnv(request: Request, response: JkResponse) {
+export function routerGetNodeEnv(request: Request, response: JkResponse) {
   try {
     response.sendContent(NODE_ENV);
   } catch (error) {

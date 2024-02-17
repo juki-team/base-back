@@ -124,6 +124,24 @@ export class TelegramBotService {
     return this.send(`sendMessage?chat_id=${chatId}&text=${encodeURIComponent(markdownV2Text)}&parse_mode=MarkdownV2`);
   }
   
+  getTitle(title: string) {
+    return `${this.escape(this._HEADER + ':')} *${this.escape(title)}*`;
+  }
+  
+  async sendMessages(messages: string[], chatId: string) {
+    const results = [];
+    for (let i = 0; i < messages.length; i++) {
+      results.push(await this.sendMessage(
+        messages[i]
+        + (messages.length > 1
+          ? this.escape(`\n${i + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`)
+          : '')
+        , chatId,
+      ));
+    }
+    return results;
+  }
+  
   async sendErrorMessage(title: string, error: any, requestData?: any) {
     logError(LogLevel.ERROR)(error, title);
     const errorText = util.inspect(error, { depth: 5, compact: false });
@@ -132,7 +150,7 @@ export class TelegramBotService {
     
     const messages = errorTextChunked.map(errorText => (
       [
-        `_${this.escape(this._HEADER + ':')}_\n*${this.escape(title)}*`,
+        this.getTitle(title),
         '```',
         this.escape(errorText),
         '```',
@@ -143,31 +161,30 @@ export class TelegramBotService {
       ].join('\n')
     ));
     
-    const results = [];
-    for (let i = 0; i < messages.length; i++) {
-      results.push(await this.sendMessage(
-        messages[i] + (messages.length > 1 ? this.escape(`\n${i
-        + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
-        , this._JUKI_ERROR_LOGS_CHAT_ID));
-    }
+    return await this.sendMessages(messages, this._JUKI_ERROR_LOGS_CHAT_ID);
+  }
+  
+  toText(content: any) {
+    let contentText = '';
     
-    return results;
+    Object.entries(content).forEach(([ key, value ]) => {
+      contentText += `\n*${this.escape(key + ':')}* ` +
+        `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(JSON.stringify(v) + '') + '`').join(', ')}`;
+    });
+    
+    return contentText;
   }
   
   async sendInfoMessage(title: string, content: any, text?: boolean) {
     logInfo(LogLevel.DEBUG)(content, title);
     let contentText = util.inspect(content, { depth: 5, compact: false });
     if (text) {
-      contentText = '';
-      Object.entries(content).forEach(([ key, value ]) => {
-        contentText += `\n*${this.escape(key + ':')}* ` +
-          `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(v + '') + '`').join(', ')}`;
-      });
+      contentText = this.toText(content);
     }
     const contentTextChunked = chunkString(contentText, this.maxSizeText);
     const messages = contentTextChunked.map(contentText => (
       [
-        `_${this.escape(this._HEADER + ':')}_\n*${this.escape(title)}*`,
+        this.getTitle(title),
         ...(text ? [ contentText ] : [
           '\n```',
           this.escape(contentText),
@@ -176,14 +193,6 @@ export class TelegramBotService {
       ].join('\n')
     ));
     
-    const results = [];
-    for (let i = 0; i < messages.length; i++) {
-      results.push(await this.sendMessage(
-        messages[i] + (messages.length > 1 ? this.escape(`\n${i
-        + 1}/${messages.length} [${messages[i].length}/${this.maxSizeText}]`) : '')
-        , this._JUKI_INFO_LOGS_CHAT_ID));
-    }
-    
-    return results;
+    return await this.sendMessages(messages, this._JUKI_INFO_LOGS_CHAT_ID);
   }
 }
