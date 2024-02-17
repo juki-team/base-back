@@ -168,8 +168,8 @@ export class TelegramBotService {
     let contentText = '';
     
     Object.entries(content).forEach(([ key, value ]) => {
-      contentText += `\n*${this.escape(key + ':')}* ` +
-        `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(JSON.stringify(v) + '') + '`').join(', ')}`;
+      contentText += `\n*${this.escape(key + ':')}* `
+        + `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(v instanceof RegExp ? v.toString() : JSON.stringify(v)) + '`').join(', ')}`;
     });
     
     return contentText;
