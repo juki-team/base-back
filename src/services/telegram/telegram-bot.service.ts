@@ -154,10 +154,14 @@ export class TelegramBotService {
         '```',
         this.escape(errorText),
         '```',
-        '*REQUEST*',
-        '```',
-        this.escape(requestText),
-        '```',
+        ...(requestData !== undefined
+          ? [
+            '*REQUEST*',
+            '```',
+            this.escape(requestText),
+            '```',
+          ]
+          : []),
       ].join('\n')
     ));
     
