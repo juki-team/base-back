@@ -38,17 +38,20 @@ export const shouldDisplayLog = (logLevel: LogLevel) => {
   return false;
 };
 
+export const printDate = () => {
+  const now = new Date();
+  return `${now.getDate().padStart(2, '0')}/${(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear().padStart(4, '0')}::${now.toLocaleTimeString()}`;
+}
+
 export const logMessage = (logLevel: LogLevel) => (message: any) => {
   if (shouldDisplayLog(logLevel)) {
-    const now = new Date();
-    console.log(`[MSG] ${now}, ${message}`);
+    console.log(`[MSG] ${printDate()}, ${message}`);
   }
 };
 
 export const logInfo = (logLevel: LogLevel) => (content: any, title?: string) => {
   if (shouldDisplayLog(logLevel)) {
-    const now = new Date();
-    console.log(`[INFO] ${now}` + (title ? `, ${title}:` : ':'));
+    console.log(`[INFO] ${printDate()}` + (title ? `, ${title}:` : ':'));
     console.log(util.inspect(content, { depth: 5, compact: false }));
     console.log(`------`);
   }
@@ -56,8 +59,7 @@ export const logInfo = (logLevel: LogLevel) => (content: any, title?: string) =>
 
 export const logError = (logLevel: LogLevel) => (content: any, title?: string) => {
   if (shouldDisplayLog(logLevel)) {
-    const now = new Date();
-    console.log(`[ERROR] ${now}` + (title ? `, ${title}:` : ':'));
+    console.log(`[ERROR] ${printDate()}` + (title ? `, ${title}:` : ':'));
     console.log(util.inspect(content, { depth: 5, compact: false }));
     console.log(`_______`);
   }
