@@ -13,7 +13,8 @@ export class TelegramBotService {
   _JUKI_ERROR_LOGS_CHAT_ID: string = '';
   _HEADER?: string;
   _fetcher: fetcherType;
-  readonly maxSizeText = 1200;
+  // The maximum length of a Telegram message is 4096 characters and it must be UTF-8 encoded.
+  readonly maxSizeText = 2048;
   
   constructor(fetcher: fetcherType) {
     // this._JUKI_LOGS_BOT_TOKEN = jukiLogsBotToken;
@@ -189,11 +190,10 @@ export class TelegramBotService {
     const messages = contentTextChunked.map(contentText => (
       [
         this.getTitle(title),
-        ...(text ? [ contentText ] : [
-          '\n```',
-          this.escape(contentText),
-          '```',
-        ]),
+        ...(text
+            ? [ contentText ]
+            : [ '\n```', this.escape(contentText), '```' ]
+        ),
       ].join('\n')
     ));
     
