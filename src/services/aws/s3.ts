@@ -39,7 +39,7 @@ export function s3Bucket(bucket: string) {
       folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate | LinkFilesJukiLy,
       nameDataHashed?: boolean,
       name?: string,
-      params?: PutObjectCommandInput,
+      params?: Partial<PutObjectCommandInput>,
     }): Promise<PutObjectCommandOutput & {
       bucket: string, folder: string, name: string, extension: string, key: string
     }> => {

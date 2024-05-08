@@ -42,7 +42,7 @@ export function sqsQueue(queueUrl: string) {
       const params: ReceiveMessageRequest = {
         QueueUrl: queueUrl,
         AttributeNames: [
-          // 'SentTimestamp', // QueueAttributeName..
+          // 'SentTimestamp', // ERROR  Type '"SentTimestamp"' is not assignable to type 'QueueAttributeName'. // QueueAttributeName..
         ],
         MaxNumberOfMessages: 1,
         MessageAttributeNames: [
