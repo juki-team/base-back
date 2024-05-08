@@ -47,7 +47,7 @@ export function s3Bucket(bucket: string) {
       const name = nameDataHashed ? crypto.createHash('sha256')
         .update(body, 'utf-8')
         .digest('hex') : (_name ? _name : uuidv4());
-      const key = `${folder}/${name}.${extension}`;
+      const key = `${folder ? folder + '/' : ''}${name}${extension ? '.' + extension : ''}`;
       
       const params = {
         Bucket: bucket,
