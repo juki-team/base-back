@@ -11,10 +11,11 @@ import {
   PutObjectCommandOutput,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { PutObjectCommandInput } from '@aws-sdk/client-s3/dist-types/commands/PutObjectCommand';
 import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
-import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub } from '../../types';
+import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub, LinkFilesJukiLy } from '../../types';
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from './config';
 
 export const awsS3 = new S3Client({
@@ -30,17 +31,19 @@ export function s3Bucket(bucket: string) {
                         folder,
                         nameDataHashed = false,
                         name: _name,
+                        params: otherParams,
                       }: {
       body: any,
       contentType: string,
       extension?: string,
-      folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate,
+      folder: ImagesJukiPub | FilesJukiPub | FilesJukiPrivate | LinkFilesJukiLy,
       nameDataHashed?: boolean,
-      name?: string
+      name?: string,
+      params?: PutObjectCommandInput,
     }): Promise<PutObjectCommandOutput & {
       bucket: string, folder: string, name: string, extension: string, key: string
     }> => {
-      const extension = _extension || mime.extension(contentType) || '.bin';
+      const extension = _extension ?? (mime.extension(contentType) || '.bin');
       const name = nameDataHashed ? crypto.createHash('sha256')
         .update(body, 'utf-8')
         .digest('hex') : (_name ? _name : uuidv4());
@@ -51,6 +54,7 @@ export function s3Bucket(bucket: string) {
         Key: key,
         Body: body,
         ContentType: contentType,
+        ...otherParams,
       };
       const command = new PutObjectCommand(params);
       return { ...await awsS3.send(command), bucket, folder, name, extension, key };

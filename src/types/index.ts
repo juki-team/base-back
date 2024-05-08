@@ -24,3 +24,7 @@ export enum FilesJukiPub {
 export enum FilesJukiPrivate {
   TEST_CASES = 'test-cases',
 }
+
+export enum LinkFilesJukiLy {
+  ROOT = '',
+}
