@@ -1,6 +1,10 @@
 import { chunkString, LogLevel } from '@juki-team/commons';
-import { AxiosResponse } from 'axios';
+// import { AxiosResponse } from 'axios';
 import { logError, logInfo, logMessage, stringifyObject } from '../../helpers';
+
+const axios = require('axios');
+
+type AxiosResponse = any; // axios.AxiosResponse;
 
 type fetcherOptionsType = { body?: Object | FormData, method?: 'POST' | 'GET' };
 
