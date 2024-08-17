@@ -1,6 +1,6 @@
 import { LogLevel } from '@juki-team/commons';
-import * as util from 'node:util';
 import { LOG_LEVEL } from '../config';
+import { stringifyObject } from '../helpers';
 
 export const shouldDisplayLog = (logLevel: LogLevel) => {
   switch (logLevel) {
@@ -41,7 +41,7 @@ export const shouldDisplayLog = (logLevel: LogLevel) => {
 export const printDate = () => {
   const now = new Date();
   return `${now.getDate().padStart(2, '0')}/${(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear().padStart(4, '0')}::${now.toLocaleTimeString()}`;
-}
+};
 
 export const logMessage = (logLevel: LogLevel) => (message: any) => {
   if (shouldDisplayLog(logLevel)) {
@@ -52,7 +52,7 @@ export const logMessage = (logLevel: LogLevel) => (message: any) => {
 export const logInfo = (logLevel: LogLevel) => (content: any, title?: string) => {
   if (shouldDisplayLog(logLevel)) {
     console.log(`[INFO] ${printDate()}` + (title ? `, ${title}:` : ':'));
-    console.log(util.inspect(content, { depth: 5, compact: false }));
+    console.log(stringifyObject(content, 5));
     console.log(`------`);
   }
 };
@@ -60,7 +60,7 @@ export const logInfo = (logLevel: LogLevel) => (content: any, title?: string) =>
 export const logError = (logLevel: LogLevel) => (content: any, title?: string) => {
   if (shouldDisplayLog(logLevel)) {
     console.log(`[ERROR] ${printDate()}` + (title ? `, ${title}:` : ':'));
-    console.log(util.inspect(content, { depth: 5, compact: false }));
+    console.log(stringifyObject(content, 5));
     console.log(`_______`);
   }
 };

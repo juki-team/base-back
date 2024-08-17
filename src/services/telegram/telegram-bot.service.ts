@@ -1,7 +1,6 @@
 import { chunkString, LogLevel } from '@juki-team/commons';
 import { AxiosResponse } from 'axios';
-import * as util from 'node:util';
-import { logError, logInfo, logMessage } from '../../helpers';
+import { logError, logInfo, logMessage, stringifyObject } from '../../helpers';
 
 type fetcherOptionsType = { body?: Object | FormData, method?: 'POST' | 'GET' };
 
@@ -145,8 +144,8 @@ export class TelegramBotService {
   
   async sendErrorMessage(title: string, error: any, requestData?: any) {
     logError(LogLevel.ERROR)(error, title);
-    const errorText = util.inspect(error, { depth: 5, compact: false });
-    const requestText = util.inspect(requestData, { depth: 5, compact: false });
+    const errorText = stringifyObject(error, 5);
+    const requestText = stringifyObject(requestData, 5);
     const errorTextChunked = chunkString(errorText, this.maxSizeText);
     
     const messages = errorTextChunked.map(errorText => (
@@ -182,7 +181,7 @@ export class TelegramBotService {
   
   async sendInfoMessage(title: string, content: any, text?: boolean) {
     logInfo(LogLevel.DEBUG)(content, title);
-    let contentText = util.inspect(content, { depth: 5, compact: false });
+    let contentText = stringifyObject(content, 5);
     if (text) {
       contentText = this.toText(content);
     }
