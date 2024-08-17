@@ -1,16 +1,17 @@
 import { HTTPMethod, LogLevel } from '@juki-team/commons';
-import axios from 'axios';
 import { IncomingMessage } from 'http';
 import https from 'https';
 import { logInfo, logMessage } from './log';
 
+const axios = require('axios');
+
 export const fetcherHttps_deprecated = ({
-  hostname = '',
-  path = '/',
-  method = HTTPMethod.GET,
-  uri = '',
-  body = {},
-}: {
+                                          hostname = '',
+                                          path = '/',
+                                          method = HTTPMethod.GET,
+                                          uri = '',
+                                          body = {},
+                                        }: {
   hostname?: string,
   path?: string,
   method?: HTTPMethod,
@@ -55,11 +56,16 @@ export const fetcherHttps_deprecated = ({
 });
 
 export const fetcherAxios = async ({
-  method = 'GET',
-  url,
-  body = {},
-  config,
-}: { method?: string, url: string, body?: Object, config?: { timeout: number } }) => {
+                                     method = 'GET',
+                                     url,
+                                     body = {},
+                                     config,
+                                   }: {
+  method?: string,
+  url: string,
+  body?: Object,
+  config?: { timeout: number }
+}) => {
   if (method === 'POST') {
     logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherAxios POST');
     const headers: any = {};
