@@ -1,8 +1,7 @@
 import { LogLevel } from '@juki-team/commons';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { logInfo } from './log';
 
-// const axios = require('axios');
 /*
 export const fetcherHttps_deprecated = ({
                                           hostname = '',
@@ -54,7 +53,7 @@ export const fetcherHttps_deprecated = ({
   }
 });
 */
-/*
+
 export const fetcherAxios = async ({
                                      method = 'GET',
                                      url,
@@ -79,7 +78,7 @@ export const fetcherAxios = async ({
   }
   return await axios.get(url, config);
 };
-*/
+/*
 export const fetcherNodeFetch = async ({
                                          method = 'GET',
                                          url,
@@ -92,7 +91,7 @@ export const fetcherNodeFetch = async ({
   config?: { timeout: number }
 }) => {
   if (method === 'POST') {
-    logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherAxios POST');
+    logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherNodeFetch POST');
     const headers: any = {};
     if (body instanceof FormData) {
       headers['Content-Type'] = 'multipart/form-data';
@@ -104,3 +103,4 @@ export const fetcherNodeFetch = async ({
   }
   return await fetch(url);
 };
+*/
