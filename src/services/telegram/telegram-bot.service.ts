@@ -41,6 +41,9 @@ export class TelegramBotService {
   
   // https://core.telegram.org/bots/api#markdownv2-style
   escape(text: string): string {
+    if (typeof text !== 'string') {
+      return '__NO_STRING__';
+    }
     return text
       .split('_').join('\\_')
       .split('*').join('\\*')
@@ -175,10 +178,14 @@ export class TelegramBotService {
   toText(content: any) {
     let contentText = '';
     
-    Object.entries(content).forEach(([ key, value ]) => {
-      contentText += `\n*${this.escape(key + ':')}* `
-        + `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(v instanceof RegExp ? v.toString() : JSON.stringify(v)) + '`').join(', ')}`;
-    });
+    if (typeof content === 'object' && content !== null) {
+      Object.entries(content).forEach(([ key, value ]) => {
+        contentText += `\n*${this.escape(key + ':')}* `
+          + `${(Array.isArray(value) ? value : [ value ]).map(v => '`' + this.escape(v instanceof RegExp ? v.toString() : JSON.stringify(v)) + '`').join(', ')}`;
+      });
+    } else {
+      contentText = `${content}`;
+    }
     
     return contentText;
   }
