@@ -1,10 +1,9 @@
-import { HTTPMethod, LogLevel } from '@juki-team/commons';
-import { IncomingMessage } from 'http';
-import https from 'https';
-import { logInfo, logMessage } from './log';
+import { LogLevel } from '@juki-team/commons';
+import fetch from 'node-fetch';
+import { logInfo } from './log';
 
-const axios = require('axios');
-
+// const axios = require('axios');
+/*
 export const fetcherHttps_deprecated = ({
                                           hostname = '',
                                           path = '/',
@@ -54,7 +53,8 @@ export const fetcherHttps_deprecated = ({
     }).on('error', (err: Error) => reject(err));
   }
 });
-
+*/
+/*
 export const fetcherAxios = async ({
                                      method = 'GET',
                                      url,
@@ -78,4 +78,29 @@ export const fetcherAxios = async ({
     return await axios.get(url, config);
   }
   return await axios.get(url, config);
+};
+*/
+export const fetcherNodeFetch = async ({
+                                         method = 'GET',
+                                         url,
+                                         body = {},
+                                         config,
+                                       }: {
+  method?: string,
+  url: string,
+  body?: Object,
+  config?: { timeout: number }
+}) => {
+  if (method === 'POST') {
+    logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherAxios POST');
+    const headers: any = {};
+    if (body instanceof FormData) {
+      headers['Content-Type'] = 'multipart/form-data';
+    }
+    return await fetch(url, { ...config, body: JSON.stringify(body), headers, method: 'POST' });
+  } else if (method === 'GET') {
+    logInfo(LogLevel.TRACE)({ url, method }, 'fetcherNodeFetch GET');
+    return await fetch(url);
+  }
+  return await fetch(url);
 };

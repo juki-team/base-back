@@ -2,7 +2,7 @@ import { chunkString, LogLevel } from '@juki-team/commons';
 // import { AxiosResponse } from 'axios';
 import { logError, logInfo, logMessage, stringifyObject } from '../../helpers';
 
-const axios = require('axios');
+// const axios = require('axios');
 
 type AxiosResponse = any; // axios.AxiosResponse;
 
