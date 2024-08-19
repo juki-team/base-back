@@ -16,10 +16,12 @@ import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
 import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub, LinkFilesJukiLy } from '../../types';
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from './config';
+import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, WITHOUT_AWS_KEYS } from './config';
 
 export const awsS3 = new S3Client({
-  credentials: { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
+  credentials: WITHOUT_AWS_KEYS
+    ? undefined
+    : { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
 });
 
 export function s3Bucket(bucket: string) {

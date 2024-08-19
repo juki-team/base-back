@@ -13,11 +13,13 @@ import {
   StopTaskCommandOutput,
 } from '@aws-sdk/client-ecs';
 
-import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY } from './config';
+import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, WITHOUT_AWS_KEYS } from './config';
 
 export const awsEcs = new ECSClient({
   region: AWS_REGION,
-  credentials: { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
+  credentials: WITHOUT_AWS_KEYS
+    ? undefined
+    : { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
 });
 
 // TODO put on ENV
@@ -29,11 +31,13 @@ const subnets = [
   'subnet-c14bdbf0',
   'subnet-14327e72',
 ];
-const securityGroups = ['sg-020d888fae3cf28f6'];
+const securityGroups = [ 'sg-020d888fae3cf28f6' ];
 
 export function ecs() {
   return {
-    describeTaskDefinition: async ({ taskDefinition }: { taskDefinition: string }): Promise<DescribeTaskDefinitionCommandOutput> => {
+    describeTaskDefinition: async ({ taskDefinition }: {
+      taskDefinition: string
+    }): Promise<DescribeTaskDefinitionCommandOutput> => {
       const command = new DescribeTaskDefinitionCommand({ taskDefinition });
       return await awsEcs.send(command);
     },
