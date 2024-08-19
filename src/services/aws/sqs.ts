@@ -36,6 +36,13 @@ export function sqsQueue(queueUrl: string) {
       });
       return await awsSqs.send(command);
     },
+    deleteMessageByReceiptHandle: async (receiptHandle: string): Promise<DeleteMessageCommandOutput> => {
+      const command = new DeleteMessageCommand({
+        QueueUrl: queueUrl,
+        ReceiptHandle: receiptHandle,
+      });
+      return await awsSqs.send(command);
+    },
     receiveMessage: async (props?: {
       visibilityTimeout: number,
       waitTimeSeconds: number
