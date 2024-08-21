@@ -6,6 +6,10 @@ export const readFile = (fileName: string) => fs.promises.readFile(fileName, 'ut
 
 export const writeFile = (fileName: string, data: string) => fs.promises.writeFile(fileName, data);
 
+export const existsFolder = (folderPath: string) => {
+  return fs.existsSync(folderPath);
+};
+
 export const getFiles = (dir: string, recursive: boolean, files__?: string[]) => {
   const files_: string[] = files__ || [];
   let files: string[] = [];
