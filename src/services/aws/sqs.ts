@@ -25,7 +25,7 @@ export const awsSqs = new SQSClient({
     : { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
 });
 
-export function sqsQueue(queueUrl: string) {
+export function sqsQueue(queueUrl: string, isFifo: boolean) {
   return {
     deleteMessage: async ({ receiveMessageResult }: {
       receiveMessageResult: ReceiveMessageResult
@@ -83,8 +83,9 @@ export function sqsQueue(queueUrl: string) {
         },
         QueueUrl: queueUrl,
         MessageBody: messageBody,
-        MessageDeduplicationId: messageDeduplicationId,
-        MessageGroupId: messageGroupId,
+        ...(isFifo
+          ? { MessageDeduplicationId: messageDeduplicationId, MessageGroupId: messageGroupId }
+          : {}),
       });
       return await awsSqs.send(command);
     },
