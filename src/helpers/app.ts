@@ -33,7 +33,7 @@ export const initialSetupApp = () => {
   
   const app = express();
   app.disable('x-powered-by');
-  app.use(express.json());
+  app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
   if (shouldDisplayLog(LogLevel.DEBUG)) {
     app.use(loggerAllRequestHandler);
