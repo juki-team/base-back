@@ -35,7 +35,7 @@
     "@aws-sdk/client-ecs": "^3.569.0",
     "@aws-sdk/client-s3": "^3.569.0",
     "@aws-sdk/client-sqs": "^3.569.0",
-    "@juki-team/commons": "^0.0.423",
+    "@juki-team/commons": "^0.0.661",
     "axios": "^1.6.8",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
