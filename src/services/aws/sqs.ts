@@ -32,11 +32,15 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
     deleteMessage: async ({ receiveMessageResult }: {
       receiveMessageResult: ReceiveMessageResult
     }): Promise<DeleteMessageCommandOutput> => {
+      const receiptHandle = receiveMessageResult?.Messages?.[0].ReceiptHandle || '';
       const command = new DeleteMessageCommand({
         QueueUrl: queueUrl,
-        ReceiptHandle: receiveMessageResult?.Messages?.[0].ReceiptHandle || '',
+        ReceiptHandle: receiptHandle,
       });
-      return await awsSqs.send(command);
+      const result = await awsSqs.send(command);
+      log(LogLevel.INFO)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}"`);
+      log(LogLevel.DEBUG)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}", result: "${JSON.stringify(result)}"`);
+      return result;
     },
     deleteMessageByReceiptHandle: async (receiptHandle: string): Promise<DeleteMessageCommandOutput> => {
       const command = new DeleteMessageCommand({
