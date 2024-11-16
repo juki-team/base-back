@@ -11,7 +11,7 @@ export const ORIGINS = [
   /^((https:\/\/juki-ui\.com)|(https:\/\/[a-zA-Z0-9\-_]+\.juki-ui\.com))$/,
   /^((https:\/\/oscargauss\.com)|(https:\/\/[a-zA-Z0-9\-_]+\.oscargauss\.com))$/,
 ];
-export const LOG_LEVEL = process.env.LOG_LEVEL || LogLevel.INFO;
+export const LOG_LEVEL: LogLevel = process.env.LOG_LEVEL as LogLevel || LogLevel.INFO;
 
 export const PORT = process.env.PORT || 4000;
 

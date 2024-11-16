@@ -1,6 +1,6 @@
 import { LogLevel } from '@juki-team/commons';
 import axios from 'axios';
-import { logInfo } from './log';
+import { log } from './log';
 
 /*
 export const fetcherHttps_deprecated = ({
@@ -66,14 +66,14 @@ export const fetcherAxios = async ({
   config?: { timeout: number }
 }) => {
   if (method === 'POST') {
-    logInfo(LogLevel.TRACE)({ url, method, body }, 'fetcherAxios POST');
+    log(LogLevel.TRACE)('fetcherAxios POST', { url, method, body });
     const headers: any = {};
     if (body instanceof FormData) {
       headers['Content-Type'] = 'multipart/form-data';
     }
     return await axios.post(url, body, { ...config, headers });
   } else if (method === 'GET') {
-    logInfo(LogLevel.TRACE)({ url, method }, 'fetcherAxios GET');
+    log(LogLevel.TRACE)('fetcherAxios GET', { url, method });
     return await axios.get(url, config);
   }
   return await axios.get(url, config);

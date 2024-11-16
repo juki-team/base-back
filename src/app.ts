@@ -1,4 +1,3 @@
-require('dotenv').config();
 import { jkLogTelegramBot, NODE_ENV } from './index';
 
 jkLogTelegramBot.setHeader('__BASE BACK__');

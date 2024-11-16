@@ -1,6 +1,6 @@
 import { LogLevel } from '@juki-team/commons';
 import fs from 'fs';
-import { logError } from '../helpers';
+import { log } from '../helpers';
 
 export const readFile = (fileName: string) => fs.promises.readFile(fileName, 'utf8');
 
@@ -17,7 +17,7 @@ export const getFiles = (dir: string, recursive: boolean, files__?: string[]) =>
     files = fs.readdirSync(dir);
   } catch (error) {
     files = [];
-    logError(LogLevel.TRACE)(error, 'Error on fs.readdirSync(dir)');
+    log(LogLevel.ERROR)(`failed to read files from ${dir}`, error);
   }
   for (const i in files) {
     const name = dir + '/' + files[i];
@@ -26,7 +26,7 @@ export const getFiles = (dir: string, recursive: boolean, files__?: string[]) =>
       validDir = recursive && fs.statSync(name).isDirectory();
     } catch (error) {
       validDir = false;
-      logError(LogLevel.TRACE)(error, 'Error on fs.statSync(name).isDirectory()');
+      log(LogLevel.ERROR)(`failed to execute "fs.statSync(${name}).isDirectory()"`, error);
     }
     if (validDir) {
       getFiles(name, true, files_);

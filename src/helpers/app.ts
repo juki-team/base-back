@@ -11,7 +11,7 @@ import {
   loggerRequestTimeHandler,
   responsesMiddleware,
 } from '../middlewares';
-import { logMessage, shouldDisplayLog } from './log';
+import { log, shouldDisplayLog } from './log';
 import { ResponseContent, ResponseContents, ResponseError } from './responses';
 
 declare global {
@@ -25,11 +25,7 @@ declare global {
 }
 
 export const initialSetupApp = () => {
-  
-  logMessage(LogLevel.INFO)(`NODE_ENV [${NODE_ENV}]`);
-  logMessage(LogLevel.INFO)(`VERSION [${VERSION}]`);
-  logMessage(LogLevel.INFO)(`PORT [${PORT}]`);
-  logMessage(LogLevel.INFO)(`ORIGINS [${ORIGINS.join(',')}]`);
+  log(LogLevel.INFO)('starting initial express set up', { NODE_ENV, VERSION, PORT, ORIGINS });
   
   const app = express();
   app.disable('x-powered-by');
@@ -44,14 +40,15 @@ export const initialSetupApp = () => {
   app.use(responsesMiddleware);
   app.use(cors({ origin: ORIGINS, credentials: true }));
   app.use(cookieParser());
-  
+  log(LogLevel.INFO)('completed express set up');
   return app;
 };
 
 export const finishSetupApp = (app: Express) => {
+  log(LogLevel.INFO)('starting finish express set up');
   app.use(errorLoggerHandler);
   app.use(errorResponderHandler);
   app.use(failSafeHandler);
-  
-  return app.listen(PORT, () => logMessage(LogLevel.INFO)(`Listening on port ${PORT}`));
+  log(LogLevel.INFO)('completed finish express set up');
+  return app.listen(PORT, () => log(LogLevel.INFO)(`listening on port ${PORT}`));
 };

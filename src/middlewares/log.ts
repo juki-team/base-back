@@ -1,6 +1,6 @@
 import { LogLevel } from '@juki-team/commons';
 import { NextFunction, Request, Response } from 'express';
-import { logInfo, logMessage } from '../helpers/log';
+import { log } from '../helpers/log';
 
 export function loggerAllRequestHandler(request: Request, response: Response, next: NextFunction) {
   const { rawHeaders, httpVersion, method, socket, url, body, params } = request;
@@ -19,8 +19,8 @@ export function loggerAllRequestHandler(request: Request, response: Response, ne
   };
   const requestStart = Date.now();
   const no = nextNRequest().padStart(5);
-  logInfo(LogLevel.DEBUG)(data, `[request: ${no}] ${url}`);
-  response.on('finish', () => logMessage(LogLevel.DEBUG)(`[request: ${no}] ${url} [${Date.now() - requestStart}]`));
+  log(LogLevel.DEBUG)(`[request: ${no}] ${url}`, data);
+  response.on('finish', () => log(LogLevel.DEBUG)(`[request: ${no}] ${url} [${Date.now() - requestStart}]`));
   next();
 }
 
@@ -35,7 +35,7 @@ export function loggerRequestTimeHandler(request: Request, response: Response, n
   const { url } = request;
   const requestStart = Date.now();
   const no = nextNRequest().padStart(5);
-  logMessage(LogLevel.INFO)(`[request: ${no}] ${url}`);
-  response.on('finish', () => logMessage(LogLevel.INFO)(`[request: ${no}] ${url} [${Date.now() - requestStart}]`));
+  log(LogLevel.INFO)(`[request: ${no}] ${url}`);
+  response.on('finish', () => log(LogLevel.INFO)(`[request: ${no}] ${url} [${Date.now() - requestStart}]`));
   next();
 }
