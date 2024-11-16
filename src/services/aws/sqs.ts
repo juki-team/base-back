@@ -76,10 +76,12 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
                           messageBody,
                           messageDeduplicationId,
                           messageGroupId,
+                          delaySeconds,
                         }: {
       messageBody: string,
       messageDeduplicationId: string,
-      messageGroupId: string
+      messageGroupId: string,
+      delaySeconds?: number,
     }): Promise<SendMessageCommandOutput> => {
       const command = new SendMessageCommand({
         // Remove DelaySeconds parameter and value for FIFO queues
@@ -95,6 +97,7 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
         ...(isFifo
           ? { MessageDeduplicationId: messageDeduplicationId, MessageGroupId: messageGroupId }
           : {}),
+        DelaySeconds: delaySeconds,
       });
       const result = await awsSqs.send(command);
       log(LogLevel.INFO)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}"`);
