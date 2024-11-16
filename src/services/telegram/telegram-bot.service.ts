@@ -148,7 +148,7 @@ export class TelegramBotService {
   }
   
   async sendErrorMessage(title: string, error: any, requestData?: any) {
-    log(LogLevel.DEBUG)(`sending error message "${title}"`, error);
+    log(LogLevel.INFO)(`ERROR: sending error message "${title}"`, error);
     const errorText = stringifyObject(error, 5);
     const requestText = stringifyObject(requestData, 5);
     const errorTextChunked = chunkString(errorText, this.maxSizeText);
@@ -189,7 +189,7 @@ export class TelegramBotService {
   }
   
   async sendInfoMessage(title: string, content: any, text?: boolean) {
-    log(LogLevel.DEBUG)(`sending info message "${title}"`, content);
+    log(LogLevel.INFO)(`INFO: sending info message "${title}"`, content);
     let contentText = stringifyObject(content, 5);
     if (text) {
       contentText = this.toText(content);

@@ -15,6 +15,8 @@ import {
   SendMessageCommandOutput,
   SQSClient,
 } from '@aws-sdk/client-sqs';
+import { LogLevel } from '@juki-team/commons';
+import { log } from '../../helpers';
 import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, WITHOUT_AWS_KEYS } from './config';
 
 export const awsSqs = new SQSClient({
@@ -41,7 +43,10 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
         QueueUrl: queueUrl,
         ReceiptHandle: receiptHandle,
       });
-      return await awsSqs.send(command);
+      const result = await awsSqs.send(command);
+      log(LogLevel.INFO)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}"`);
+      log(LogLevel.DEBUG)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}", result: "${JSON.stringify(result)}"`);
+      return result;
     },
     receiveMessage: async (props?: {
       visibilityTimeout: number,
@@ -87,7 +92,10 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
           ? { MessageDeduplicationId: messageDeduplicationId, MessageGroupId: messageGroupId }
           : {}),
       });
-      return await awsSqs.send(command);
+      const result = await awsSqs.send(command);
+      log(LogLevel.INFO)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}"`);
+      log(LogLevel.DEBUG)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}", body: "${messageBody}"`);
+      return result;
     },
     changeMessageVisibility: async ({
                                       receiveMessageResult,
