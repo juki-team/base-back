@@ -64,6 +64,6 @@ export const printDate = () => {
 
 export const log = (logLevel: LogLevel) => (message: string, content?: any) => {
   if (shouldDisplayLog(logLevel)) {
-    console.log(`[${logLevel}] ${printDate()}, ${message}${content ? ':' : ''} ${stringifyObject(content, 5)}`);
+    console.log(`[${logLevel}] ${printDate()}, ${message}${content ? ': ' + stringifyObject(content, 5) : ''} `);
   }
 };
