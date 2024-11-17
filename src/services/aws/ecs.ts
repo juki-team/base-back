@@ -8,10 +8,12 @@ import {
   ListTaskDefinitionsCommandOutput,
   ListTasksCommand,
   RunTaskCommand,
+  RunTaskCommandInput,
   RunTaskCommandOutput,
   StopTaskCommand,
   StopTaskCommandOutput,
 } from '@aws-sdk/client-ecs';
+import { jkLogTelegramBot } from '../telegram';
 
 import {
   AWS_ACCESS_KEY_ID,
@@ -59,11 +61,13 @@ export function ecsCluster(cluster: string) {
       return await awsEcs.send(command);
     },
     stopTask: async ({ task }: { task: string }): Promise<StopTaskCommandOutput> => {
-      const command = new StopTaskCommand({ cluster, task });
+      const stopTaskCommandInput = { cluster, task };
+      const command = new StopTaskCommand(stopTaskCommandInput);
+      void jkLogTelegramBot.sendInfoMessage('stop task started', stopTaskCommandInput);
       return await awsEcs.send(command);
     },
     runTask: async ({ taskDefinition }: { taskDefinition: string }): Promise<RunTaskCommandOutput> => {
-      const command = new RunTaskCommand({
+      const runTaskCommandInput: RunTaskCommandInput = {
         launchType: 'FARGATE',
         cluster,
         count: 1,
@@ -75,7 +79,9 @@ export function ecsCluster(cluster: string) {
             securityGroups,
           },
         },
-      });
+      };
+      void jkLogTelegramBot.sendInfoMessage('run task started', runTaskCommandInput);
+      const command = new RunTaskCommand(runTaskCommandInput);
       return await awsEcs.send(command);
     },
   };
