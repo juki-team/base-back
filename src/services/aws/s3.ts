@@ -12,9 +12,11 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { PutObjectCommandInput } from '@aws-sdk/client-s3/dist-types/commands/PutObjectCommand';
+import { LogLevel } from '@juki-team/commons';
 import crypto from 'crypto';
 import mime from 'mime-types';
 import { v4 as uuidv4 } from 'uuid';
+import { log } from '../../helpers';
 import { FilesJukiPrivate, FilesJukiPub, ImagesJukiPub, LinkFilesJukiLy } from '../../types';
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, WITHOUT_AWS_KEYS } from './config';
 
@@ -25,16 +27,17 @@ export const awsS3 = new S3Client({
 });
 
 export function s3Bucket(bucket: string) {
+  
   return {
-    putObject: async ({
-                        body,
-                        contentType,
-                        extension: _extension,
-                        folder,
-                        nameDataHashed = false,
-                        name: _name,
-                        params: otherParams,
-                      }: {
+    async putObject({
+                      body,
+                      contentType,
+                      extension: _extension,
+                      folder,
+                      nameDataHashed = false,
+                      name: _name,
+                      params: otherParams,
+                    }: {
       body: any,
       contentType: string,
       extension?: string,
@@ -44,7 +47,7 @@ export function s3Bucket(bucket: string) {
       params?: Partial<PutObjectCommandInput>,
     }): Promise<PutObjectCommandOutput & {
       bucket: string, folder: string, name: string, extension: string, key: string
-    }> => {
+    }> {
       const extension = _extension ?? (mime.extension(contentType) || '.bin');
       const name = nameDataHashed ? crypto.createHash('sha256')
         .update(body, 'utf-8')
@@ -61,7 +64,7 @@ export function s3Bucket(bucket: string) {
       const command = new PutObjectCommand(params);
       return { ...await awsS3.send(command), bucket, folder, name, extension, key };
     },
-    getObject: async ({ key }: { key: string }): Promise<string> => {
+    async getObject({ key }: { key: string }): Promise<string> {
       const command = new GetObjectCommand({ Bucket: bucket, Key: key });
       const data = await awsS3.send(command);
       if (data?.Body) {
@@ -69,18 +72,18 @@ export function s3Bucket(bucket: string) {
       }
       return '';
     },
-    copyObject: async ({ copySource, key }: { copySource: string, key: string }): Promise<PutObjectCommandOutput & {
+    async copyObject({ copySource, key }: { copySource: string, key: string }): Promise<PutObjectCommandOutput & {
       bucket: string,
-    }> => {
+    }> {
       const command = new CopyObjectCommand({ CopySource: `/${bucket}/${copySource}`, Bucket: bucket, Key: key });
       const data = await awsS3.send(command);
       return { ...data, bucket };
     },
-    deleteObject: ({ key }: { key: string }): Promise<DeleteObjectCommandOutput> => {
+    deleteObject({ key }: { key: string }): Promise<DeleteObjectCommandOutput> {
       const command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
       return awsS3.send(command);
     },
-    listObjects: ({ prefix }: { prefix: string }): Promise<ListObjectsCommandOutput> => {
+    listObjects({ prefix }: { prefix: string }): Promise<ListObjectsCommandOutput> {
       const bucketParams = {
         Bucket: bucket,
         Prefix: prefix,
@@ -89,7 +92,7 @@ export function s3Bucket(bucket: string) {
       const command = new ListObjectsCommand(bucketParams);
       return awsS3.send(command);
     },
-    listAllObjects: async ({ prefix }: { prefix: string }): Promise<_Object[]> => {
+    async listAllObjects({ prefix }: { prefix: string }): Promise<_Object[]> {
       let isTruncated = true;
       let marker;
       const elements: _Object[] = [];
@@ -110,6 +113,15 @@ export function s3Bucket(bucket: string) {
         }
       }
       return elements;
+    },
+    async existsKey(key: string) {
+      try {
+        await this.getObject({ key });
+        return true;
+      } catch (error) {
+        log(LogLevel.WARN)(`s3 object with key: "${key}" not found`, { error });
+        return false;
+      }
     },
   };
 }
