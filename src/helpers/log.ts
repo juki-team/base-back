@@ -57,13 +57,8 @@ export const shouldDisplayLog = (logLevel: LogLevel) => {
   return SHOULD_DISPLAY_LOG[LOG_LEVEL]?.[logLevel] ?? false;
 };
 
-export const printDate = () => {
-  const now = new Date();
-  return `${now.getDate().padStart(2, '0')}/${(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear().padStart(4, '0')}::${now.toLocaleTimeString()}`;
-};
-
 export const log = (logLevel: LogLevel) => (message: string, content?: any) => {
   if (shouldDisplayLog(logLevel)) {
-    console.log(`[${logLevel}] ${printDate()}, ${message}${content ? ': ' + stringifyObject(content, 5) : ''} `);
+    console.log(`[${logLevel}] ${new Date().toISOString()}, ${message}${content ? ': ' + stringifyObject(content, 5) : ''} `);
   }
 };
