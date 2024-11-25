@@ -8,10 +8,10 @@ import {
   ListObjectsCommandInput,
   ListObjectsCommandOutput,
   PutObjectCommand,
+  PutObjectCommandInput,
   PutObjectCommandOutput,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { PutObjectCommandInput } from '@aws-sdk/client-s3/dist-types/commands/PutObjectCommand';
 import { LogLevel } from '@juki-team/commons';
 import crypto from 'crypto';
 import mime from 'mime-types';
