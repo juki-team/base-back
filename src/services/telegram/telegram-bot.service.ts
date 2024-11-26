@@ -1,14 +1,9 @@
 import { chunkString, LogLevel } from '@juki-team/commons';
-import { AxiosResponse } from 'axios';
 import { log, stringifyObject } from '../../helpers';
 
-// const axios = require('axios');
+type fetcherOptionsType = { body?: string | FormData, method?: 'POST' | 'GET' };
 
-// type AxiosResponse = any; // axios.AxiosResponse;
-
-type fetcherOptionsType = { body?: Object | FormData, method?: 'POST' | 'GET' };
-
-export type fetcherType = (url: string, options?: fetcherOptionsType) => Promise<AxiosResponse>
+export type fetcherType = (url: string, options?: fetcherOptionsType) => Promise<Response>
 
 export class TelegramBotService {
   _JUKI_LOGS_BOT_TOKEN: string = '';
@@ -75,6 +70,7 @@ export class TelegramBotService {
     const url = `https://api.telegram.org/bot${this._JUKI_LOGS_BOT_TOKEN}/${partialUrl}`;
     
     return this._fetcher(url, formData ? { body: formData, method: 'POST' } : {})
+      .then(response => response.json())
       .then(response => {
         if (response.data.ok) {
           log(LogLevel.TRACE)('telegram message sent ' + url);

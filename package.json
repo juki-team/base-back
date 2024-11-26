@@ -35,14 +35,13 @@
     "@aws-sdk/client-ecs": "^3.569.0",
     "@aws-sdk/client-s3": "^3.569.0",
     "@aws-sdk/client-sqs": "^3.569.0",
-    "axios": "^1.6.8",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "mime-types": "^2.1.35",
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "@juki-team/commons": "^0.0.661",
+    "@juki-team/commons": "^0.0.670",
     "express": "^4.19.2"
   }
 }

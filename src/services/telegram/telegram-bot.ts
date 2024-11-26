@@ -3,11 +3,9 @@ import {
   TELEGRAM_JUKI_INFO_LOGS_CHAT_ID,
   TELEGRAM_JUKI_LOGS_BOT_TOKEN,
 } from '../../config';
-import { fetcherAxios } from '../../helpers/request';
 import { fetcherType, TelegramBotService } from './telegram-bot.service';
 
-const getFetcher: fetcherType = (url: string, options) => fetcherAxios(
-  { url, body: options?.body, method: options?.method });
+const getFetcher: fetcherType = (url: string, options) => fetch(url, { body: options?.body, method: options?.method });
 
 export const jkLogTelegramBot = new TelegramBotService(getFetcher);
 
