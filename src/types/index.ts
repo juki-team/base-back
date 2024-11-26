@@ -20,6 +20,7 @@ export enum FilesJukiPub {
   SHARED = 'shared', // files to share
   TEMP = 'temp', // temporal files
   PROBLEMS = 'problems',
+  CONTESTS = 'contents',
 }
 
 export enum FilesJukiPrivate {
