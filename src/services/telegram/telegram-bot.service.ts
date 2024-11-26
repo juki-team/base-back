@@ -72,6 +72,7 @@ export class TelegramBotService {
     return this._fetcher(url, formData ? { body: formData, method: 'POST' } : {})
       .then(response => response.json())
       .then(response => {
+        console.log('telegram', { response });
         if (response.data.ok) {
           log(LogLevel.TRACE)('telegram message sent ' + url);
           return;
