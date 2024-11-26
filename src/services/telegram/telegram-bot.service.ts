@@ -72,8 +72,7 @@ export class TelegramBotService {
     return this._fetcher(url, formData ? { body: formData, method: 'POST' } : {})
       .then(response => response.json())
       .then(response => {
-        console.log('telegram', { response });
-        if (response.data.ok) {
+        if (response.ok) {
           log(LogLevel.TRACE)('telegram message sent ' + url);
           return;
         }
@@ -106,7 +105,7 @@ export class TelegramBotService {
           log(LogLevel.WARN)(
             'error on sending telegram message',
             {
-              message: error.message,
+              message: error?.message,
               partialUrl, url,
               possibleError: 'Something happened in setting up the request that triggered an Error',
             },
