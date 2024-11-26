@@ -29,6 +29,9 @@ export const awsS3 = new S3Client({
 export function s3Bucket(bucket: string) {
   
   return {
+    getBucketName() {
+      return bucket;
+    },
     async putObject({
                       body,
                       contentType,
