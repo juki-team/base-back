@@ -28,5 +28,6 @@ export enum FilesJukiPrivate {
 }
 
 export enum LinkFilesJukiLy {
-  ROOT = '',
+  PUBLIC = 'p',
+  CUSTOM = 'c',
 }
