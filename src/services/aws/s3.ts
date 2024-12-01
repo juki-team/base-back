@@ -14,6 +14,7 @@ import {
   PutObjectCommandOutput,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { MetadataDirective } from '@aws-sdk/client-s3/dist-types/models/models_0';
 import { LogLevel } from '@juki-team/commons';
 import crypto from 'crypto';
 import mime from 'mime-types';
@@ -81,10 +82,19 @@ export function s3Bucket(bucket: string) {
       const command = new HeadObjectCommand({ Bucket: bucket, Key: key });
       return await awsS3.send(command);
     },
-    async copyObject({ copySource, key }: { copySource: string, key: string }): Promise<PutObjectCommandOutput & {
+    async copyObject({ copySource, key, metadataDirective }: {
+      copySource: string,
+      key: string,
+      metadataDirective?: MetadataDirective
+    }): Promise<PutObjectCommandOutput & {
       bucket: string,
     }> {
-      const command = new CopyObjectCommand({ CopySource: `/${bucket}/${copySource}`, Bucket: bucket, Key: key });
+      const command = new CopyObjectCommand({
+        CopySource: `/${bucket}/${copySource}`,
+        Bucket: bucket,
+        Key: key,
+        MetadataDirective: metadataDirective,
+      });
       const data = await awsS3.send(command);
       return { ...data, bucket };
     },
