@@ -5,6 +5,7 @@ import {
   DeleteObjectCommandOutput,
   GetObjectCommand,
   HeadObjectCommand,
+  HeadObjectCommandOutput,
   ListObjectsCommand,
   ListObjectsCommandInput,
   ListObjectsCommandOutput,
@@ -76,14 +77,9 @@ export function s3Bucket(bucket: string) {
       }
       return '';
     },
-    async getHeadObject({ key }: { key: string }): Promise<Record<string, string>> {
+    async getHeadObject({ key }: { key: string }): Promise<HeadObjectCommandOutput> {
       const command = new HeadObjectCommand({ Bucket: bucket, Key: key });
-      const data = await awsS3.send(command);
-      console.log(data);
-      if (data?.Metadata) {
-        return data.Metadata;
-      }
-      return {};
+      return await awsS3.send(command);
     },
     async copyObject({ copySource, key }: { copySource: string, key: string }): Promise<PutObjectCommandOutput & {
       bucket: string,
