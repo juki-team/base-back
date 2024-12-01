@@ -79,6 +79,7 @@ export function s3Bucket(bucket: string) {
     async getHeadObject({ key }: { key: string }): Promise<Record<string, string>> {
       const command = new HeadObjectCommand({ Bucket: bucket, Key: key });
       const data = await awsS3.send(command);
+      console.log(data);
       if (data?.Metadata) {
         return data.Metadata;
       }
