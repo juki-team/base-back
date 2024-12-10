@@ -11,7 +11,7 @@
   "scripts": {
     "start": "export NODE_ENV=production && ts-node ./src/app.ts",
     "dev": "export VERSION=$(node -p \"require('./package.json').version\") && ts-node-dev ./src/app.ts",
-    "pull": "yarn add @juki-team/commons",
+    "pull": "yarn add @juki-team/commons --peer",
     "rollup:build": "rollup -c",
     "build": "rm -rf dist && yarn rollup:build",
     "git-push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn publish --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f",
@@ -35,7 +35,7 @@
     "@aws-sdk/client-ecs": "^3.569.0",
     "@aws-sdk/client-s3": "^3.569.0",
     "@aws-sdk/client-sqs": "^3.569.0",
-    "@juki-team/commons": "^0.0.670",
+    "@juki-team/commons": "^0.0.686",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.19.2",
