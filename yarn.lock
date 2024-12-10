@@ -27,11 +27,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@juki-team/commons@^0.0.686":
-  version "0.0.686"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.686/ea101ad5a0fe6be892aa173142fa433d95fa63e7#ea101ad5a0fe6be892aa173142fa433d95fa63e7"
-  integrity sha512-kvCxDQdEnitFj0hWXZ+LRqog1QYlfTOz+YSSW4xmylwkujQRGuY1ISGEMR2y4FOqN0ZH1Ym4pa3xxfQetUZVDg==
-
 "@rollup/plugin-typescript@^11.1.6":
   version "11.1.6"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-11.1.6.tgz#724237d5ec12609ec01429f619d2a3e7d4d1b22b"
@@ -693,6 +688,11 @@ universalify@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
   integrity sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==
+
+uuid@^11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.0.3.tgz#248451cac9d1a4a4128033e765d137e2b2c49a3d"
+  integrity sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

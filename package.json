@@ -38,8 +38,8 @@
     "@juki-team/commons": "^0.0.686",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "mime-types": "^2.1.35",
-    "uuid": "^9.0.1"
+    "uuid": "^11.0.3"
   }
 }
