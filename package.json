@@ -30,18 +30,16 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@aws-sdk/client-ec2": "^3.569.0",
     "@aws-sdk/client-ecs": "^3.569.0",
     "@aws-sdk/client-s3": "^3.569.0",
     "@aws-sdk/client-sqs": "^3.569.0",
+    "@juki-team/commons": "^0.0.670",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "express": "^4.19.2",
     "mime-types": "^2.1.35",
     "uuid": "^9.0.1"
-  },
-  "peerDependencies": {
-    "@juki-team/commons": "^0.0.670",
-    "express": "^4.19.2"
   }
 }
