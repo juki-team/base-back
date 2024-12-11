@@ -21,7 +21,7 @@ export function wsApi(endpoint: string) {
   });
   
   return {
-    PostToConnectionWebSocketResponseEvent: async ({ message, event, connectionId }: {
+    postToConnectionWebSocketResponseEvent: async ({ message, event, connectionId }: {
       message: string,
       event: WebSocketResponseEventDTO,
       connectionId: string,
