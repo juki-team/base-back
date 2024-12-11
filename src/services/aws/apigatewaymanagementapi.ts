@@ -3,6 +3,7 @@ import {
   DeleteConnectionCommand,
   DeleteConnectionCommandOutput,
   PostToConnectionCommand,
+  PostToConnectionCommandInput,
   PostToConnectionCommandOutput,
 } from '@aws-sdk/client-apigatewaymanagementapi';
 import { contentResponse, LogLevel, WebSocketResponseEventDTO } from '@juki-team/commons';
@@ -20,14 +21,14 @@ export const awsAGWS = new ApiGatewayManagementApiClient({
     : { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
 });
 
-export function agws() {
+export function wsAPI() {
   return {
     PostToConnectionWebSocketResponseEvent: async ({ message, event, connectionId }: {
       message: string,
       event: WebSocketResponseEventDTO,
       connectionId: string,
     }): Promise<PostToConnectionCommandOutput> => {
-      const requestParams = {
+      const requestParams: PostToConnectionCommandInput = {
         ConnectionId: connectionId,
         Data: JSON.stringify(contentResponse(message, event)),
       };
