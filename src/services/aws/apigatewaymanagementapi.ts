@@ -8,13 +8,13 @@ import {
 } from '@aws-sdk/client-apigatewaymanagementapi';
 import { contentResponse, LogLevel, WebSocketResponseEventDTO } from '@juki-team/commons';
 import { log } from '../../helpers';
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, WITHOUT_AWS_KEYS } from './config';
+import { AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, WITHOUT_AWS_KEYS } from './config';
 
 export function wsApi(endpoint: string) {
   
   const awsAGMA = new ApiGatewayManagementApiClient({
     endpoint,
-    // region: AWS_REGION,
+    region: AWS_REGION,
     credentials: WITHOUT_AWS_KEYS
       ? undefined
       : { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
