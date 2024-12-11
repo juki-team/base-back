@@ -38,8 +38,8 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
         ReceiptHandle: receiptHandle,
       });
       const result = await awsSqs.send(command);
-      log(LogLevel.INFO)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}"`);
-      log(LogLevel.DEBUG)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}", result: "${JSON.stringify(result)}"`);
+      log(LogLevel.DEBUG)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}"`);
+      log(LogLevel.TRACE)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}", result: "${JSON.stringify(result)}"`);
       return result;
     },
     deleteMessageByReceiptHandle: async (receiptHandle: string): Promise<DeleteMessageCommandOutput> => {
@@ -48,8 +48,8 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
         ReceiptHandle: receiptHandle,
       });
       const result = await awsSqs.send(command);
-      log(LogLevel.INFO)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}"`);
-      log(LogLevel.DEBUG)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}", result: "${JSON.stringify(result)}"`);
+      log(LogLevel.DEBUG)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}"`);
+      log(LogLevel.TRACE)(`message deleted of ${queueUrl}, receiptHandle: "${receiptHandle}", result: "${JSON.stringify(result)}"`);
       return result;
     },
     receiveMessage: async (props?: {
@@ -100,8 +100,8 @@ export function sqsQueue(queueUrl: string, isFifo: boolean) {
         DelaySeconds: delaySeconds,
       });
       const result = await awsSqs.send(command);
-      log(LogLevel.INFO)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}"`);
-      log(LogLevel.DEBUG)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}", body: "${messageBody}"`);
+      log(LogLevel.DEBUG)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}"`);
+      log(LogLevel.TRACE)(`message sent to ${queueUrl}, messageDeduplicationId: "${messageDeduplicationId}", messageGroupId: "${messageGroupId}", body: "${messageBody}"`);
       return result;
     },
     changeMessageVisibility: async ({

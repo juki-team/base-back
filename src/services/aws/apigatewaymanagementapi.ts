@@ -33,14 +33,14 @@ export function wsApi(endpoint: string) {
         ConnectionId: connectionId,
         Data: JSON.stringify(contentResponse(message, event)),
       };
-      log(LogLevel.INFO)(`sending web socket, message: "${message}", endpoint: "${endpoint}"`);
-      log(LogLevel.DEBUG)(`sending web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}"`);
+      log(LogLevel.DEBUG)(`sending web socket, message: "${message}", endpoint: "${endpoint}"`);
+      log(LogLevel.TRACE)(`sending web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}"`);
       
       try {
         const command = new PostToConnectionCommand(requestParams);
         const output = await awsAGMA.send(command);
-        log(LogLevel.INFO)(`sent web socket, message: "${message}", endpoint: "${endpoint}"`);
-        log(LogLevel.DEBUG)(`sent web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}", response: "${JSON.stringify(output)}"`);
+        log(LogLevel.DEBUG)(`sent web socket, message: "${message}", endpoint: "${endpoint}"`);
+        log(LogLevel.TRACE)(`sent web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}", response: "${JSON.stringify(output)}"`);
         return { success: true, output, error: null };
       } catch (error: any) {
         if (error?.name === 'GoneException') {
@@ -53,10 +53,10 @@ export function wsApi(endpoint: string) {
     },
     deleteConnection: async ({ connectionId }: { connectionId: string }): Promise<DeleteConnectionCommandOutput> => {
       const command = new DeleteConnectionCommand({ ConnectionId: connectionId });
-      log(LogLevel.INFO)(`deleting web socket, connectionId: "${connectionId}", endpoint: "${endpoint}"`);
+      log(LogLevel.DEBUG)(`deleting web socket, connectionId: "${connectionId}", endpoint: "${endpoint}"`);
       const response = await awsAGMA.send(command);
-      log(LogLevel.INFO)(`deleted web socket, connectionId: "${connectionId}", endpoint: "${endpoint}"`);
-      log(LogLevel.DEBUG)(`deleted web socket, connectionId: "${connectionId}", endpoint: "${endpoint}", response: "${JSON.stringify(response)}"`);
+      log(LogLevel.DEBUG)(`deleted web socket, connectionId: "${connectionId}", endpoint: "${endpoint}"`);
+      log(LogLevel.TRACE)(`deleted web socket, connectionId: "${connectionId}", endpoint: "${endpoint}", response: "${JSON.stringify(response)}"`);
       return response;
     },
   };
