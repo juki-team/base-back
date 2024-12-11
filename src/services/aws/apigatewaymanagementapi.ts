@@ -44,12 +44,10 @@ export function wsApi(endpoint: string) {
         return { success: true, output, error: null };
       } catch (error: any) {
         if (error?.name === 'GoneException') {
-          log(LogLevel.WARN)(`sent error web socket, message: "${message}", endpoint: "${endpoint}", connectionId: "${connectionId}": GoneException, is no longer active`);
+          log(LogLevel.WARN)(`GoneException error sending web socket message, connection is no longer active, message: "${message}", endpoint: "${endpoint}", connectionId: "${connectionId}", requestParams: "${JSON.stringify(requestParams)}"`);
           return { success: false, output: null, error };
-        } else {
-          console.error('Unexpected error:', error);
         }
-        log(LogLevel.ERROR)(`sent error web socket, message: "${message}", endpoint: "${endpoint}", connectionId: "${connectionId}":  Unexpected error`, error);
+        log(LogLevel.ERROR)(`Unexpected error sending web socket message, message: "${message}", endpoint: "${endpoint}", connectionId: "${connectionId}", requestParams: "${JSON.stringify(requestParams)}"`, error);
         return { success: false, output: null, error };
       }
     },
