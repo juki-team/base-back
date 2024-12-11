@@ -21,7 +21,7 @@ export const awsAGWS = new ApiGatewayManagementApiClient({
     : { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
 });
 
-export function wsAPI() {
+export function wsApi() {
   return {
     PostToConnectionWebSocketResponseEvent: async ({ message, event, connectionId }: {
       message: string,
