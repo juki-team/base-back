@@ -25,18 +25,33 @@ export function wsApi(endpoint: string) {
       message: string,
       event: WebSocketResponseEventDTO,
       connectionId: string,
-    }): Promise<PostToConnectionCommandOutput> => {
+    }): Promise<
+      { success: true, output: PostToConnectionCommandOutput, error: null }
+      | { success: false, output: null, error: any }
+    > => {
       const requestParams: PostToConnectionCommandInput = {
         ConnectionId: connectionId,
         Data: JSON.stringify(contentResponse(message, event)),
       };
       log(LogLevel.INFO)(`sending web socket, message: "${message}", endpoint: "${endpoint}"`);
       log(LogLevel.DEBUG)(`sending web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}"`);
-      const command = new PostToConnectionCommand(requestParams);
-      const response = await awsAGMA.send(command);
-      log(LogLevel.INFO)(`sent web socket, message: "${message}", endpoint: "${endpoint}"`);
-      log(LogLevel.DEBUG)(`sent web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}", response: "${JSON.stringify(response)}"`);
-      return response;
+      
+      try {
+        const command = new PostToConnectionCommand(requestParams);
+        const output = await awsAGMA.send(command);
+        log(LogLevel.INFO)(`sent web socket, message: "${message}", endpoint: "${endpoint}"`);
+        log(LogLevel.DEBUG)(`sent web socket, message: "${message}", endpoint: "${endpoint}", requestParams: "${JSON.stringify(requestParams)}", response: "${JSON.stringify(output)}"`);
+        return { success: true, output, error: null };
+      } catch (error: any) {
+        if (error?.name === 'GoneException') {
+          log(LogLevel.ERROR)(`sent error web socket, message: "${message}", endpoint: "${endpoint}", connectionId: "${connectionId}": GoneException, is no longer active`);
+          return { success: false, output: null, error };
+        } else {
+          console.error('Unexpected error:', error);
+        }
+        log(LogLevel.ERROR)(`sent error web socket, message: "${message}", endpoint: "${endpoint}", connectionId: "${connectionId}":  Unexpected error`, error);
+        return { success: false, output: null, error };
+      }
     },
     deleteConnection: async ({ connectionId }: { connectionId: string }): Promise<DeleteConnectionCommandOutput> => {
       const command = new DeleteConnectionCommand({ ConnectionId: connectionId });
