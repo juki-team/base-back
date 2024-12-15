@@ -1,6 +1,7 @@
 import { LogLevel } from '@juki-team/commons';
 import { LOG_LEVEL } from '../config';
 import { stringifyObject } from '../helpers';
+import { jkLogTelegramBot } from '../services';
 
 const SHOULD_DISPLAY_LOG: { [key in LogLevel]: { [key in LogLevel]: boolean } } = {
   [LogLevel.FATAL]: {
@@ -57,8 +58,14 @@ export const shouldDisplayLog = (logLevel: LogLevel) => {
   return SHOULD_DISPLAY_LOG[LOG_LEVEL]?.[logLevel] ?? false;
 };
 
-export const log = (logLevel: LogLevel) => (message: string, content?: any) => {
+export const log = (logLevel: LogLevel) => (message: string, content?: any, reportAs?: 'info' | 'error') => {
   if (shouldDisplayLog(logLevel)) {
-    console.log(`[${logLevel}] ${new Date().toISOString()}, ${message}${content ? ': ' + stringifyObject(content, 5) : ''} `);
+    const title = `[${logLevel}] ${new Date().toISOString()}, ${message}`;
+    console.log(`${title}${content ? ': ' + stringifyObject(content, 5) : ''} `);
+    if (reportAs === 'info') {
+      void jkLogTelegramBot.sendInfoMessage(title, content);
+    } else if (reportAs === 'error') {
+      void jkLogTelegramBot.sendErrorMessage(title, content);
+    }
   }
 };
