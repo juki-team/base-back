@@ -8,6 +8,8 @@ import {
   JkError,
 } from '@juki-team/commons';
 import { Request, Response } from 'express';
+import { IncomingHttpHeaders } from 'http';
+import { ParsedQs } from 'qs';
 import { jkLogTelegramBot } from '../services';
 import { ResponseOptionsType } from '../types';
 
@@ -15,7 +17,17 @@ export type ResponseError = (error: JkError, options?: ResponseOptionsType, ...r
 export type ResponseContents = <T, >(contents: T[], meta: ContentsMetaType, options?: ResponseOptionsType) => void;
 export type ResponseContent = <T, >(content: T, options?: ResponseOptionsType) => void;
 
-export const getRequestData = (request: Request) => {
+export type RequestType = {
+  method: string,
+  originalUrl: string,
+  baseUrl: string,
+  path: string,
+  query: ParsedQs,
+  headers: IncomingHttpHeaders,
+  body: string
+};
+
+export const getRequestData = (request: RequestType) => {
   return {
     method: request.method,
     originalUrl: request.originalUrl,
@@ -32,7 +44,7 @@ export const responseError = (request: Request, response: Response) => (error: J
   const { message: _message, status: _status } = options || {};
   let { notify } = options || {};
   
-  const errors = [error, ...restErrors];
+  const errors = [ error, ...restErrors ];
   
   if (errors.some(error => error.code === ErrorCode.ERR500 || !ERROR[error.code] || ERROR[error.code]?.status >= 500 || ERROR[error.code]?.status < 400)) {
     notify = true;
@@ -59,7 +71,11 @@ export const responseContents = (request: Request, response: Response) => <T, >(
   const status = _status || 200;
   
   if (notify) {
-    void jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, { contents, meta, request: getRequestData(request) });
+    void jkLogTelegramBot.sendInfoMessage(`${status}: ${message}`, {
+      contents,
+      meta,
+      request: getRequestData(request),
+    });
   }
   
   return response.status(status).send(contentsResponse(message, contents, meta));
