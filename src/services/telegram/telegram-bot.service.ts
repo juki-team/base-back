@@ -145,7 +145,7 @@ export class TelegramBotService {
   
   async sendErrorMessage(title: string, error: any, requestData?: any) {
     log(LogLevel.INFO)(`ERROR: sending error message "${title}"`, error);
-    const errorText = stringifyObject({ message: error?.message, name: error?.name, stack: error?.stack, error }, 5);
+    const errorText = stringifyObject(error, 5);
     const requestText = stringifyObject(requestData, 5);
     const errorTextChunked = chunkString(errorText, this.maxSizeText);
     

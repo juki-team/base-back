@@ -8,7 +8,8 @@ export const stringifyObject = function (obj: any, depth: number, indent = 0) {
     return obj.toString();
   } else if (typeof obj === 'object' && obj !== null) {
     const indentStr = ' '.repeat(indent);
-    const entries: string = Object.entries(obj).map(([ key, value ]) => {
+    const entries: string = Object.getOwnPropertyNames(obj).map((key) => {
+      const value = obj[key];
       if (typeof value === 'function') {
         return `${indentStr}    ${key}: ${value.toString()},`;
       } else if (typeof value === 'object' && value !== null) {
