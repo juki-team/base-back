@@ -1,6 +1,5 @@
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import typescript from 'rollup-plugin-typescript2';
-
-import pkg from './package.json';
 
 export default {
   input: {
@@ -22,10 +21,12 @@ export default {
       format: 'esm',
     },
   ],
-  external: [ ...Object.keys(pkg.peerDependencies || {}) ],
+  // external: [ ...Object.keys(pkg.peerDependencies || {}) ],
   plugins: [
-    typescript({
-      typescript: require('typescript'),
-    }),
+    peerDepsExternal(),
+    typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json', exclude: [ '**/*.stories.tsx' ] }),
+    // typescript({
+    //   typescript: require('typescript'),
+    // }),
   ],
 };

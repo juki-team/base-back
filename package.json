@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",
-  "types": "./dist/esm/index.d.ts",
+  "types": "./dist/module-types/index.d.ts",
   "files": [
     "dist"
   ],
@@ -12,32 +12,32 @@
     ".": {
       "require": "./dist/cjs/main.js",
       "import": "./dist/esm/main.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/module-types/index.d.ts"
     },
     "./services/aws/apigatewaymanagementapi": {
       "require": "./dist/cjs/services/aws/apigatewaymanagementapi.js",
       "import": "./dist/esm/services/aws/apigatewaymanagementapi.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/module-types/services/aws/apigatewaymanagementapi.d.ts"
     },
     "./services/aws/ec2": {
       "require": "./dist/cjs/services/aws/ec2.js",
       "import": "./dist/esm/services/aws/ec2.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/module-types/services/aws/ec2.d.ts"
     },
     "./services/aws/ecs": {
       "require": "./dist/cjs/services/aws/ecs.js",
       "import": "./dist/esm/services/aws/ecs.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/module-types/services/aws/ecs.d.ts"
     },
     "./services/aws/s3": {
       "require": "./dist/cjs/services/aws/s3.js",
       "import": "./dist/esm/services/aws/s3.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/module-types/services/aws/s3.d.ts"
     },
     "./services/aws/sqs": {
       "require": "./dist/cjs/services/aws/sqs.js",
       "import": "./dist/esm/services/aws/sqs.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/module-types/services/aws/sqs.d.ts"
     }
   },
   "scripts": {
@@ -65,6 +65,7 @@
     "@types/uuid": "^9.0.8",
     "express": "^4.21.2",
     "rollup": "^2.70.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.34.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
