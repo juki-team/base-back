@@ -24,7 +24,7 @@ export default {
   // external: [ ...Object.keys(pkg.peerDependencies || {}) ],
   plugins: [
     peerDepsExternal(),
-    typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json', exclude: [ '**/*.stories.tsx' ] }),
+    typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json' }),
     // typescript({
     //   typescript: require('typescript'),
     // }),
