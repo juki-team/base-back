@@ -5,7 +5,7 @@
   "type": "commonjs",
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",
-  "types": "./dist/module-types/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "files": [
     "dist"
   ],
