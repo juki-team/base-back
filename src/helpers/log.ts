@@ -1,7 +1,7 @@
 import { LogLevel } from '@juki-team/commons';
 import { LOG_LEVEL } from '../config';
 import { stringifyObject } from '../helpers';
-import { jkLogTelegramBot } from '../services';
+import { jkLogTelegramBot } from '../services/telegram';
 
 const SHOULD_DISPLAY_LOG: { [key in LogLevel]: { [key in LogLevel]: boolean } } = {
   [LogLevel.FATAL]: {

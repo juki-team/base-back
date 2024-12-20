@@ -10,7 +10,7 @@ import {
 import { Request, Response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { ParsedQs } from 'qs';
-import { jkLogTelegramBot } from '../services';
+import { jkLogTelegramBot } from '../services/telegram';
 import { ResponseOptionsType } from '../types';
 
 export type ResponseError = (error: JkError, options?: ResponseOptionsType, ...restErrors: JkError[]) => void;
