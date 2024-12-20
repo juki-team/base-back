@@ -2,7 +2,7 @@
   "name": "@juki-team/base-back",
   "version": "0.0.183",
   "license": "MIT",
-  "type": "module",
+  "type": "commonjs",
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",
   "types": "./dist/module-types/index.d.ts",
@@ -13,32 +13,32 @@
     ".": {
       "require": "./dist/cjs/main.js",
       "import": "./dist/esm/main.js",
-      "types": "./dist/module-types/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     },
     "./services/aws/apigatewaymanagementapi": {
       "require": "./dist/cjs/services/aws/apigatewaymanagementapi.js",
       "import": "./dist/esm/services/aws/apigatewaymanagementapi.js",
-      "types": "./dist/module-types/services/aws/apigatewaymanagementapi.d.ts"
+      "types": "./dist/types/services/aws/apigatewaymanagementapi.d.ts"
     },
     "./services/aws/ec2": {
       "require": "./dist/cjs/services/aws/ec2.js",
       "import": "./dist/esm/services/aws/ec2.js",
-      "types": "./dist/module-types/services/aws/ec2.d.ts"
+      "types": "./dist/types/services/aws/ec2.d.ts"
     },
     "./services/aws/ecs": {
       "require": "./dist/cjs/services/aws/ecs.js",
       "import": "./dist/esm/services/aws/ecs.js",
-      "types": "./dist/module-types/services/aws/ecs.d.ts"
+      "types": "./dist/types/services/aws/ecs.d.ts"
     },
     "./services/aws/s3": {
       "require": "./dist/cjs/services/aws/s3.js",
       "import": "./dist/esm/services/aws/s3.js",
-      "types": "./dist/module-types/services/aws/s3.d.ts"
+      "types": "./dist/types/services/aws/s3.d.ts"
     },
     "./services/aws/sqs": {
       "require": "./dist/cjs/services/aws/sqs.js",
       "import": "./dist/esm/services/aws/sqs.js",
-      "types": "./dist/module-types/services/aws/sqs.d.ts"
+      "types": "./dist/types/services/aws/sqs.d.ts"
     }
   },
   "scripts": {
