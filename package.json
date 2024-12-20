@@ -2,6 +2,7 @@
   "name": "@juki-team/base-back",
   "version": "0.0.180",
   "license": "MIT",
+  "type": "module",
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",
   "types": "./dist/module-types/index.d.ts",
