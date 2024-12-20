@@ -1,6 +1,6 @@
 {
   "name": "@juki-team/base-back",
-  "version": "0.0.187",
+  "version": "0.0.188",
   "license": "MIT",
   "type": "commonjs",
   "main": "./dist/main.js",
