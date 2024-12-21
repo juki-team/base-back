@@ -2,7 +2,7 @@
   "name": "@juki-team/base-back",
   "version": "0.0.196",
   "license": "MIT",
-  "type": "module",
+  "type": "commonjs",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -11,33 +11,33 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs",
+      "import": "./dist/esm/index.jsm",
       "types": "./dist/types/index.d.ts"
     },
     "./services/aws/apigatewaymanagementapi": {
-      "require": "./dist/cjs/services/aws/apigatewaymanagementapi.js",
-      "import": "./dist/esm/services/aws/apigatewaymanagementapi.js",
+      "require": "./dist/cjs/services/aws/apigatewaymanagementapi.cjs",
+      "import": "./dist/esm/services/aws/apigatewaymanagementapi.jsm",
       "types": "./dist/types/services/aws/apigatewaymanagementapi.d.ts"
     },
     "./services/aws/ec2": {
-      "require": "./dist/cjs/services/aws/ec2.js",
-      "import": "./dist/esm/services/aws/ec2.js",
+      "require": "./dist/cjs/services/aws/ec2.cjs",
+      "import": "./dist/esm/services/aws/ec2.jsm",
       "types": "./dist/types/services/aws/ec2.d.ts"
     },
     "./services/aws/ecs": {
-      "require": "./dist/cjs/services/aws/ecs.js",
-      "import": "./dist/esm/services/aws/ecs.js",
+      "require": "./dist/cjs/services/aws/ecs.cjs",
+      "import": "./dist/esm/services/aws/ecs.cjsm",
       "types": "./dist/types/services/aws/ecs.d.ts"
     },
     "./services/aws/s3": {
-      "require": "./dist/cjs/services/aws/s3.js",
-      "import": "./dist/esm/services/aws/s3.js",
+      "require": "./dist/cjs/services/aws/s3.cjs",
+      "import": "./dist/esm/services/aws/s3.jsm",
       "types": "./dist/types/services/aws/s3.d.ts"
     },
     "./services/aws/sqs": {
-      "require": "./dist/cjs/services/aws/sqs.js",
-      "import": "./dist/esm/services/aws/sqs.js",
+      "require": "./dist/cjs/services/aws/sqs.cjs",
+      "import": "./dist/esm/services/aws/sqs.jsm",
       "types": "./dist/types/services/aws/sqs.d.ts"
     }
   },

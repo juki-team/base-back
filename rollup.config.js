@@ -18,10 +18,12 @@ export default {
     {
       dir: 'dist/cjs',
       format: 'cjs',
+      entryFileNames: '[name].cjs',
     },
     {
       dir: 'dist/esm',
       format: 'es',
+      entryFileNames: '[name].mjs',
     },
   ],
   // output: {
