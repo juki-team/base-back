@@ -1,6 +1,6 @@
 {
   "name": "@juki-team/base-back",
-  "version": "0.0.193",
+  "version": "0.0.194",
   "license": "MIT",
   "type": "module",
   "main": "./dist/cjs/index.js",
