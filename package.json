@@ -5,7 +5,7 @@
   "type": "commonjs",
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.jsm",
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/cjs/index.d.ts",
   "files": [
     "dist"
   ],
@@ -13,32 +13,32 @@
     ".": {
       "require": "./dist/cjs/index.cjs",
       "import": "./dist/esm/index.jsm",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/cjs/index.d.ts"
     },
     "./services/aws/apigatewaymanagementapi": {
       "require": "./dist/cjs/services/aws/apigatewaymanagementapi.cjs",
       "import": "./dist/esm/services/aws/apigatewaymanagementapi.jsm",
-      "types": "./dist/types/services/aws/apigatewaymanagementapi.d.ts"
+      "types": "./dist/cjs/services/aws/apigatewaymanagementapi.d.ts"
     },
     "./services/aws/ec2": {
       "require": "./dist/cjs/services/aws/ec2.cjs",
       "import": "./dist/esm/services/aws/ec2.jsm",
-      "types": "./dist/types/services/aws/ec2.d.ts"
+      "types": "./dist/cjs/services/aws/ec2.d.ts"
     },
     "./services/aws/ecs": {
       "require": "./dist/cjs/services/aws/ecs.cjs",
       "import": "./dist/esm/services/aws/ecs.cjsm",
-      "types": "./dist/types/services/aws/ecs.d.ts"
+      "types": "./dist/cjs/services/aws/ecs.d.ts"
     },
     "./services/aws/s3": {
       "require": "./dist/cjs/services/aws/s3.cjs",
       "import": "./dist/esm/services/aws/s3.jsm",
-      "types": "./dist/types/services/aws/s3.d.ts"
+      "types": "./dist/cjs/services/aws/s3.d.ts"
     },
     "./services/aws/sqs": {
       "require": "./dist/cjs/services/aws/sqs.cjs",
       "import": "./dist/esm/services/aws/sqs.jsm",
-      "types": "./dist/types/services/aws/sqs.d.ts"
+      "types": "./dist/cjs/services/aws/sqs.d.ts"
     }
   },
   "scripts": {

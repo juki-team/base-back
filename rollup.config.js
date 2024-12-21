@@ -38,8 +38,8 @@ export default {
     resolve(),
     commonjs(),
     json(),
-    // typescript(),
-    typescript({ useTsconfigDeclarationDir: true }),
+    typescript(),
+    // typescript({ useTsconfigDeclarationDir: true }),
     // typescript({
     //   typescript: require('typescript'),
     // }),
