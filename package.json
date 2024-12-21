@@ -3,42 +3,42 @@
   "version": "0.0.191",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./services/aws/apigatewaymanagementapi": {
-      "require": "./dist/services/aws/apigatewaymanagementapi.js",
-      "import": "./dist/services/aws/apigatewaymanagementapi.js",
-      "types": "./dist/services/aws/apigatewaymanagementapi.d.ts"
+      "require": "./dist/cjs/services/aws/apigatewaymanagementapi.js",
+      "import": "./dist/esm/services/aws/apigatewaymanagementapi.js",
+      "types": "./dist/types/services/aws/apigatewaymanagementapi.d.ts"
     },
     "./services/aws/ec2": {
-      "require": "./dist/services/aws/ec2.js",
-      "import": "./dist/services/aws/ec2.js",
-      "types": "./dist/services/aws/ec2.d.ts"
+      "require": "./dist/cjs/services/aws/ec2.js",
+      "import": "./dist/esm/services/aws/ec2.js",
+      "types": "./dist/types/services/aws/ec2.d.ts"
     },
     "./services/aws/ecs": {
-      "require": "./dist/services/aws/ecs.js",
-      "import": "./dist/services/aws/ecs.js",
-      "types": "./dist/services/aws/ecs.d.ts"
+      "require": "./dist/cjs/services/aws/ecs.js",
+      "import": "./dist/esm/services/aws/ecs.js",
+      "types": "./dist/types/services/aws/ecs.d.ts"
     },
     "./services/aws/s3": {
-      "require": "./dist/services/aws/s3.js",
-      "import": "./dist/services/aws/s3.js",
-      "types": "./dist/services/aws/s3.d.ts"
+      "require": "./dist/cjs/services/aws/s3.js",
+      "import": "./dist/esm/services/aws/s3.js",
+      "types": "./dist/types/services/aws/s3.d.ts"
     },
     "./services/aws/sqs": {
-      "require": "./dist/services/aws/sqs.js",
-      "import": "./dist/services/aws/sqs.js",
-      "types": "./dist/services/aws/sqs.d.ts"
+      "require": "./dist/cjs/services/aws/sqs.js",
+      "import": "./dist/esm/services/aws/sqs.js",
+      "types": "./dist/types/services/aws/sqs.d.ts"
     }
   },
   "scripts": {

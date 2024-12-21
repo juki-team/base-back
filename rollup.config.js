@@ -14,30 +14,30 @@ export default {
     'services/aws/sqs': 'src/services/aws/sqs.ts',
   },
   // inlineDynamicImports: true,
-  // output: [
-  //   {
-  //     dir: 'dist/cjs',
-  //     format: 'cjs',
-  //   },
-  //   {
-  //     dir: 'dist/esm',
-  //     format: 'esm',
-  //   },
-  // ],
-  output: {
-    dir: 'dist',
-    format: 'es',
-    entryFileNames: '[name].js',
-    sourcemap: true,
-  },
+  output: [
+    {
+      dir: 'dist/cjs',
+      format: 'cjs',
+    },
+    {
+      dir: 'dist/esm',
+      format: 'es',
+    },
+  ],
+  // output: {
+  //   dir: 'dist',
+  //   format: 'es',
+  //   entryFileNames: '[name].js',
+  //   sourcemap: true,
+  // },
   // external: [ ...Object.keys(pkg.peerDependencies || {}) ],
   plugins: [
     peerDepsExternal(),
     resolve(),
     commonjs(),
     json(),
-    typescript(),
-    // typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json' }),
+    // typescript(),
+    typescript({ useTsconfigDeclarationDir: true }),
     // typescript({
     //   typescript: require('typescript'),
     // }),
