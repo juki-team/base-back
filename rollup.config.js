@@ -6,7 +6,7 @@ import json from '@rollup/plugin-json';
 
 export default {
   input: {
-    'main': 'src/index.ts',
+    'index': 'src/index.ts',
     'services/aws/apigatewaymanagementapi': 'src/services/aws/apigatewaymanagementapi.ts',
     'services/aws/ec2': 'src/services/aws/ec2.ts',
     'services/aws/ecs': 'src/services/aws/ecs.ts',
@@ -27,14 +27,15 @@ export default {
   output: {
     dir: 'dist',
     format: 'es',
+    entryFileNames: '[name].js',
     sourcemap: true,
   },
   // external: [ ...Object.keys(pkg.peerDependencies || {}) ],
   plugins: [
+    peerDepsExternal(),
     resolve(),
     commonjs(),
     json(),
-    peerDepsExternal(),
     typescript(),
     // typescript({ useTsconfigDeclarationDir: true, tsconfig: './tsconfig.json' }),
     // typescript({
