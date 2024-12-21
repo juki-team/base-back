@@ -7,11 +7,11 @@ import json from '@rollup/plugin-json';
 export default {
   input: {
     'index': 'src/index.ts',
-    'services-aws-apigatewaymanagementapi': 'src/services/aws/apigatewaymanagementapi.ts',
-    'services-aws-ec2': 'src/services/aws/ec2.ts',
-    'services-aws-ecs': 'src/services/aws/ecs.ts',
-    'services-aws-s3': 'src/services/aws/s3.ts',
-    'services-aws-sqs': 'src/services/aws/sqs.ts',
+    'services/aws/apigatewaymanagementapi': 'src/services/aws/apigatewaymanagementapi.ts',
+    'services/aws/ec2': 'src/services/aws/ec2.ts',
+    'services/aws/ecs': 'src/services/aws/ecs.ts',
+    'services/aws/s3': 'src/services/aws/s3.ts',
+    'services/aws/sqs': 'src/services/aws/sqs.ts',
   },
   // inlineDynamicImports: true,
   output: [
