@@ -15,6 +15,11 @@
       "import": "./dist/esm/index.jsm",
       "types": "./dist/cjs/index.d.ts"
     },
+    "./services/express": {
+      "require": "./dist/cjs/services/express/index.cjs",
+      "import": "./dist/esm/services/express/index.jsm",
+      "types": "./dist/cjs/services/express/index.d.ts"
+    },
     "./services/aws/apigatewaymanagementapi": {
       "require": "./dist/cjs/services/aws/apigatewaymanagementapi.cjs",
       "import": "./dist/esm/services/aws/apigatewaymanagementapi.jsm",

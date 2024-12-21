@@ -7,7 +7,7 @@ import {
   errorsResponse,
   JkError,
 } from '@juki-team/commons';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { ParsedQs } from 'qs';
 import { jkLogTelegramBot } from '../services/telegram';

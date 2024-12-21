@@ -7,6 +7,7 @@ import json from '@rollup/plugin-json';
 export default {
   input: {
     'index': 'src/index.ts',
+    'services/express/index': 'src/services/express/index.ts',
     'services/aws/apigatewaymanagementapi': 'src/services/aws/apigatewaymanagementapi.ts',
     'services/aws/ec2': 'src/services/aws/ec2.ts',
     'services/aws/ecs': 'src/services/aws/ecs.ts',

@@ -1,6 +1,6 @@
 import { LogLevel } from '@juki-team/commons';
 import fs from 'fs';
-import { log } from '../helpers';
+import { log } from './log';
 
 export const readFile = (fileName: string) => fs.promises.readFile(fileName, 'utf8');
 
